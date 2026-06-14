@@ -48,6 +48,7 @@ import {
   Leaf,
   Activity,
   Sparkles,
+  ScanLine,
   Home,
 } from "lucide-react";
 
@@ -79,6 +80,7 @@ const moreGroups: {
     title: "Operations",
     items: [
       { to: "/schedule", label: "Schedule", icon: Clock },
+      { to: "/verification", label: "Verification Station", icon: ScanLine },
       { to: "/logistics", label: "Logistics Impact", icon: Truck },
     ],
   },
@@ -125,7 +127,10 @@ export default function TopBar() {
   const moreRef = useRef<HTMLDivElement>(null);
   const userRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
-  const [userMenuPos, setUserMenuPos] = useState<{ top: number; right: number }>({ top: 0, right: 0 });
+  const [userMenuPos, setUserMenuPos] = useState<{
+    top: number;
+    right: number;
+  }>({ top: 0, right: 0 });
   const location = useLocation();
   const navigate = useNavigate();
   const { resolvedTheme, setTheme } = useTheme();
@@ -134,7 +139,9 @@ export default function TopBar() {
 
   const visibleMainTabs = [
     // Citizens get a personalized portal as their home instead of /overview.
-    ...(role === "citizen" ? [{ to: "/portal", label: "Home", icon: Home }] : []),
+    ...(role === "citizen"
+      ? [{ to: "/portal", label: "Home", icon: Home }]
+      : []),
     ...mainTabs.filter((t) => canAccess(role, t.to)),
   ];
   const visibleMoreGroups = moreGroups
@@ -151,7 +158,8 @@ export default function TopBar() {
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
       const target = e.target as Node;
-      if (moreRef.current && !moreRef.current.contains(target)) setMoreOpen(false);
+      if (moreRef.current && !moreRef.current.contains(target))
+        setMoreOpen(false);
       // The user menu is rendered through a portal, so an in-menu click is not
       // inside userRef — check the portaled menu element too.
       const insideUser =
@@ -168,7 +176,11 @@ export default function TopBar() {
     if (!userOpen) return;
     const update = () => {
       const r = userRef.current?.getBoundingClientRect();
-      if (r) setUserMenuPos({ top: r.bottom + 8, right: window.innerWidth - r.right });
+      if (r)
+        setUserMenuPos({
+          top: r.bottom + 8,
+          right: window.innerWidth - r.right,
+        });
     };
     update();
     window.addEventListener("resize", update);
@@ -179,7 +191,9 @@ export default function TopBar() {
     };
   }, [userOpen]);
 
-  const moreActive = visibleMoreFlat.some((m) => location.pathname.startsWith(m.to));
+  const moreActive = visibleMoreFlat.some((m) =>
+    location.pathname.startsWith(m.to),
+  );
 
   const initials = (user?.name ?? "?")
     .split(/\s+/)
@@ -190,10 +204,26 @@ export default function TopBar() {
     .toUpperCase();
 
   const roleAccents: Record<Role, { bg: string; fg: string; label: string }> = {
-    admin:   { bg: "bg-emerald-500/15", fg: "text-emerald-700 dark:text-emerald-300", label: "Admin" },
-    manager: { bg: "bg-teal-500/15",    fg: "text-teal-700 dark:text-teal-300",       label: "Manager" },
-    driver:  { bg: "bg-amber-500/15",   fg: "text-amber-700 dark:text-amber-300",     label: "Driver" },
-    citizen: { bg: "bg-violet-500/15",  fg: "text-violet-700 dark:text-violet-300",   label: "Citizen" },
+    admin: {
+      bg: "bg-emerald-500/15",
+      fg: "text-emerald-700 dark:text-emerald-300",
+      label: "Admin",
+    },
+    manager: {
+      bg: "bg-teal-500/15",
+      fg: "text-teal-700 dark:text-teal-300",
+      label: "Manager",
+    },
+    driver: {
+      bg: "bg-amber-500/15",
+      fg: "text-amber-700 dark:text-amber-300",
+      label: "Driver",
+    },
+    citizen: {
+      bg: "bg-violet-500/15",
+      fg: "text-violet-700 dark:text-violet-300",
+      label: "Citizen",
+    },
   };
   const rAcc = roleAccents[role];
 
@@ -217,10 +247,18 @@ export default function TopBar() {
           aria-label="Toggle menu"
           className="md:hidden w-9 h-9 rounded-full hover:bg-slate-100 dark:hover:bg-white/5 flex items-center justify-center text-slate-600 dark:text-white/70"
         >
-          {mobileOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+          {mobileOpen ? (
+            <X className="w-4 h-4" />
+          ) : (
+            <Menu className="w-4 h-4" />
+          )}
         </button>
 
-        <NavLink to="/landing" className="flex items-center gap-2.5" title="View landing page">
+        <NavLink
+          to="/landing"
+          className="flex items-center gap-2.5"
+          title="View landing page"
+        >
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-400 via-teal-500 to-blue-600 flex items-center justify-center shadow-md shadow-cyan-500/30">
             <div className="w-3.5 h-3.5 bg-white rounded-full" />
           </div>
@@ -231,7 +269,9 @@ export default function TopBar() {
 
         <nav className="hidden md:flex items-center gap-1 mx-auto bg-slate-100/70 dark:bg-white/[0.04] p-1 rounded-full border border-slate-200/60 dark:border-white/5">
           {visibleMainTabs.map((t) => {
-            const active = location.pathname === t.to || location.pathname.startsWith(`${t.to}/`);
+            const active =
+              location.pathname === t.to ||
+              location.pathname.startsWith(`${t.to}/`);
             return (
               <NavLink
                 key={t.to}
@@ -264,7 +304,9 @@ export default function TopBar() {
               }`}
             >
               More
-              <ChevronDown className={`w-3 h-3 transition-transform ${moreOpen ? "rotate-180" : ""}`} />
+              <ChevronDown
+                className={`w-3 h-3 transition-transform ${moreOpen ? "rotate-180" : ""}`}
+              />
             </button>
 
             {moreOpen && (
@@ -356,11 +398,21 @@ export default function TopBar() {
           <LanguageToggle />
           <NotificationBell />
           <button
-            onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+            onClick={() =>
+              setTheme(resolvedTheme === "dark" ? "light" : "dark")
+            }
             className="w-9 h-9 rounded-full hover:bg-slate-100 dark:hover:bg-white/5 flex items-center justify-center text-slate-500 dark:text-white/60 transition-colors"
-            title={resolvedTheme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            title={
+              resolvedTheme === "dark"
+                ? "Switch to light mode"
+                : "Switch to dark mode"
+            }
           >
-            {resolvedTheme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            {resolvedTheme === "dark" ? (
+              <Sun className="w-4 h-4" />
+            ) : (
+              <Moon className="w-4 h-4" />
+            )}
           </button>
           <button
             onClick={() => navigate("/settings")}
@@ -374,78 +426,122 @@ export default function TopBar() {
               onClick={() => setUserOpen((o) => !o)}
               className="flex items-center gap-2 pl-1 pr-3 py-1 rounded-full bg-slate-100/70 dark:bg-white/[0.04] border border-slate-200/60 dark:border-white/5 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors"
             >
-              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 text-white text-[10px] flex items-center justify-center" style={{ fontWeight: 700 }}>
+              <div
+                className="w-7 h-7 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 text-white text-[10px] flex items-center justify-center"
+                style={{ fontWeight: 700 }}
+              >
                 {initials || "?"}
               </div>
               <div className="hidden lg:flex flex-col items-start leading-tight">
-                <span className="text-xs text-slate-900 dark:text-white" style={{ fontWeight: 600 }}>
+                <span
+                  className="text-xs text-slate-900 dark:text-white"
+                  style={{ fontWeight: 600 }}
+                >
                   {user?.name ?? "Guest"}
                 </span>
-                <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${rAcc.bg} ${rAcc.fg}`} style={{ fontWeight: 700 }}>
+                <span
+                  className={`text-[10px] px-1.5 py-0.5 rounded-full ${rAcc.bg} ${rAcc.fg}`}
+                  style={{ fontWeight: 700 }}
+                >
                   {rAcc.label}
                 </span>
               </div>
-              <ChevronDown className={`w-3 h-3 text-slate-500 dark:text-white/60 transition-transform ${userOpen ? "rotate-180" : ""}`} />
+              <ChevronDown
+                className={`w-3 h-3 text-slate-500 dark:text-white/60 transition-transform ${userOpen ? "rotate-180" : ""}`}
+              />
             </button>
 
-            {userOpen && createPortal(
-              <div
-                ref={userMenuRef}
-                className="fixed w-64 bg-white/95 dark:bg-[#0a0e14]/80 backdrop-blur-2xl rounded-3xl border border-slate-200 dark:border-white/10 shadow-2xl shadow-slate-900/10 dark:shadow-black/40 z-[200]"
-                style={{ top: userMenuPos.top, right: userMenuPos.right }}
-              >
-                <div className="p-4 border-b border-slate-100 dark:border-white/5">
-                  <div className="text-sm text-slate-900 dark:text-white truncate" style={{ fontWeight: 600 }}>
-                    {user?.name ?? "Guest"}
-                  </div>
-                  <div className="text-xs text-slate-500 dark:text-white/60 truncate">{user?.email}</div>
-                  <span className={`mt-2 inline-block text-[10px] px-2 py-0.5 rounded-full ${rAcc.bg} ${rAcc.fg}`} style={{ fontWeight: 700 }}>
-                    {rAcc.label}
-                  </span>
-                </div>
-                <div className="p-1.5">
-                  <button
-                    onClick={() => { setUserOpen(false); navigate("/settings"); }}
-                    className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-slate-700 dark:text-white/80 hover:bg-slate-50 dark:hover:bg-white/5"
-                  >
-                    <UserIcon className="w-4 h-4" /> Profile
-                  </button>
-                  <button
-                    onClick={() => { setUserOpen(false); navigate("/settings"); }}
-                    className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-slate-700 dark:text-white/80 hover:bg-slate-50 dark:hover:bg-white/5"
-                  >
-                    <Settings className="w-4 h-4" /> Settings
-                  </button>
-                  {role === "admin" && (
-                    <div className="px-3 pt-2 pb-1 text-[10px] uppercase tracking-[1.5px] text-slate-400 dark:text-white/40" style={{ fontWeight: 700 }}>
-                      Switch role (demo)
-                    </div>
-                  )}
-                  {role === "admin" && (["admin", "manager", "driver", "citizen"] as Role[]).map((r) => (
-                    <button
-                      key={r}
-                      onClick={() => handleSwitchRole(r)}
-                      className={`w-full flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-sm hover:bg-slate-50 dark:hover:bg-white/5 ${
-                        r === role ? "text-slate-900 dark:text-white" : "text-slate-600 dark:text-white/70"
-                      }`}
+            {userOpen &&
+              createPortal(
+                <div
+                  ref={userMenuRef}
+                  className="fixed w-64 bg-white/95 dark:bg-[#0a0e14]/80 backdrop-blur-2xl rounded-3xl border border-slate-200 dark:border-white/10 shadow-2xl shadow-slate-900/10 dark:shadow-black/40 z-[200]"
+                  style={{ top: userMenuPos.top, right: userMenuPos.right }}
+                >
+                  <div className="p-4 border-b border-slate-100 dark:border-white/5">
+                    <div
+                      className="text-sm text-slate-900 dark:text-white truncate"
+                      style={{ fontWeight: 600 }}
                     >
-                      <Repeat className="w-3.5 h-3.5" />
-                      {roleAccents[r].label}
-                      {r === role && <span className="ml-auto text-[10px] text-emerald-600 dark:text-emerald-400" style={{ fontWeight: 700 }}>active</span>}
-                    </button>
-                  ))}
-                  <div className="my-1 border-t border-slate-100 dark:border-white/5" />
-                  <div className="flex justify-center py-2">
-                    <PremiumAuthButton
-                      variant="logout"
-                      theme={resolvedTheme === "dark" ? "dark" : "light"}
-                      onLogout={() => { setUserOpen(false); handleLogout(); }}
-                    />
+                      {user?.name ?? "Guest"}
+                    </div>
+                    <div className="text-xs text-slate-500 dark:text-white/60 truncate">
+                      {user?.email}
+                    </div>
+                    <span
+                      className={`mt-2 inline-block text-[10px] px-2 py-0.5 rounded-full ${rAcc.bg} ${rAcc.fg}`}
+                      style={{ fontWeight: 700 }}
+                    >
+                      {rAcc.label}
+                    </span>
                   </div>
-                </div>
-              </div>,
-              document.body
-            )}
+                  <div className="p-1.5">
+                    <button
+                      onClick={() => {
+                        setUserOpen(false);
+                        navigate("/settings");
+                      }}
+                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-slate-700 dark:text-white/80 hover:bg-slate-50 dark:hover:bg-white/5"
+                    >
+                      <UserIcon className="w-4 h-4" /> Profile
+                    </button>
+                    <button
+                      onClick={() => {
+                        setUserOpen(false);
+                        navigate("/settings");
+                      }}
+                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-slate-700 dark:text-white/80 hover:bg-slate-50 dark:hover:bg-white/5"
+                    >
+                      <Settings className="w-4 h-4" /> Settings
+                    </button>
+                    {role === "admin" && (
+                      <div
+                        className="px-3 pt-2 pb-1 text-[10px] uppercase tracking-[1.5px] text-slate-400 dark:text-white/40"
+                        style={{ fontWeight: 700 }}
+                      >
+                        Switch role (demo)
+                      </div>
+                    )}
+                    {role === "admin" &&
+                      (["admin", "manager", "driver", "citizen"] as Role[]).map(
+                        (r) => (
+                          <button
+                            key={r}
+                            onClick={() => handleSwitchRole(r)}
+                            className={`w-full flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-sm hover:bg-slate-50 dark:hover:bg-white/5 ${
+                              r === role
+                                ? "text-slate-900 dark:text-white"
+                                : "text-slate-600 dark:text-white/70"
+                            }`}
+                          >
+                            <Repeat className="w-3.5 h-3.5" />
+                            {roleAccents[r].label}
+                            {r === role && (
+                              <span
+                                className="ml-auto text-[10px] text-emerald-600 dark:text-emerald-400"
+                                style={{ fontWeight: 700 }}
+                              >
+                                active
+                              </span>
+                            )}
+                          </button>
+                        ),
+                      )}
+                    <div className="my-1 border-t border-slate-100 dark:border-white/5" />
+                    <div className="flex justify-center py-2">
+                      <PremiumAuthButton
+                        variant="logout"
+                        theme={resolvedTheme === "dark" ? "dark" : "light"}
+                        onLogout={() => {
+                          setUserOpen(false);
+                          handleLogout();
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>,
+                document.body,
+              )}
           </div>
         </div>
       </div>
@@ -456,7 +552,7 @@ export default function TopBar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="md:hidden fixed inset-0 z-40 bg-slate-900/40 dark:bg-black/60 backdrop-blur-sm"
+            className="md:hidden fixed inset-0 z-[60] bg-slate-900/40 dark:bg-black/60 backdrop-blur-sm"
             onClick={() => setMobileOpen(false)}
           >
             <motion.div
@@ -467,8 +563,11 @@ export default function TopBar() {
               onClick={(e) => e.stopPropagation()}
               className="absolute left-0 top-0 bottom-0 w-[300px] max-w-[85vw] bg-white/90 dark:bg-[#0a0e14]/85 backdrop-blur-2xl border-r border-slate-200 dark:border-white/10 shadow-2xl overflow-y-auto"
             >
-              <div className="p-4 space-y-1">
-                <div className="text-[10px] uppercase tracking-[2px] text-slate-400 dark:text-white/40 px-2 pb-2" style={{ fontWeight: 700 }}>
+              <div className="p-4 pt-6 space-y-1">
+                <div
+                  className="text-[10px] uppercase tracking-[2px] text-slate-400 dark:text-white/40 px-2 pb-2"
+                  style={{ fontWeight: 700 }}
+                >
                   Main
                 </div>
                 {visibleMainTabs.map((t) => (
@@ -489,7 +588,10 @@ export default function TopBar() {
                 ))}
                 {visibleMoreGroups.map((g) => (
                   <div key={g.title} className="pt-3">
-                    <div className="text-[10px] uppercase tracking-[2px] text-slate-400 dark:text-white/40 px-2 pb-1" style={{ fontWeight: 700 }}>
+                    <div
+                      className="text-[10px] uppercase tracking-[2px] text-slate-400 dark:text-white/40 px-2 pb-1"
+                      style={{ fontWeight: 700 }}
+                    >
                       {g.title}
                     </div>
                     {g.items.map((m) => (

@@ -38,6 +38,7 @@ import CentersListPage from "./pages/CentersListPage";
 import ActivityLogPage from "./pages/ActivityLogPage";
 import SupportTicketsPage from "./pages/SupportTicketsPage";
 import AiValidationPage from "./pages/AiValidationPage";
+import VerificationStationPage from "./pages/VerificationStationPage";
 import FleetMapPage from "./pages/FleetMapPage";
 import PickupRequestsPage from "./pages/PickupRequestsPage";
 import SustainabilityPage from "./pages/SustainabilityPage";
@@ -263,6 +264,7 @@ export const router = createBrowserRouter([
       { path: "centers-list", element: <ProtectedRoute allowedRoles={["admin", "manager"]}><CentersListPage /></ProtectedRoute> },
       { path: "activity-log", element: <ProtectedRoute allowedRoles={["admin", "manager"]}><ActivityLogPage /></ProtectedRoute> },
       { path: "ai-validation", element: <ProtectedRoute allowedRoles={["admin", "manager"]}><AiValidationPage /></ProtectedRoute> },
+      { path: "verification", element: <ProtectedRoute allowedRoles={["admin", "manager", "driver"]}><VerificationStationPage /></ProtectedRoute> },
       { path: "sustainability", element: <ProtectedRoute allowedRoles={["admin", "manager"]}><SustainabilityPage /></ProtectedRoute> },
       { path: "partners", element: <ProtectedRoute allowedRoles={["admin", "manager"]}><PartnersPage /></ProtectedRoute> },
 
