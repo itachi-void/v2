@@ -1,7 +1,16 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
-import { LogIn, UserPlus, Shield, Briefcase, Truck, UserCircle2, Recycle } from "lucide-react";
+import {
+  LogIn,
+  UserPlus,
+  Shield,
+  Briefcase,
+  Truck,
+  UserCircle2,
+  Recycle,
+  ScanLine,
+} from "lucide-react";
 import { useAuth } from "@/app/contexts/AuthContext";
 import { homePathForRole } from "@/app/utils/roleAccess";
 import { FloatingLabelInput } from "@/app/components/FloatingLabelInput";
@@ -26,9 +35,10 @@ export type LampLoginFormProps = {
 };
 
 const demoChips = [
-  { label: "Admin",   email: "admin@ecovoid.io",   Icon: Shield },
+  { label: "Admin", email: "admin@ecovoid.io", Icon: Shield },
   { label: "Manager", email: "manager@ecovoid.io", Icon: Briefcase },
-  { label: "Driver",  email: "driver@ecovoid.io",  Icon: Truck },
+  { label: "Driver", email: "driver@ecovoid.io", Icon: Truck },
+  { label: "Employee", email: "employee@ecovoid.io", Icon: ScanLine },
   { label: "Citizen", email: "citizen@ecovoid.io", Icon: UserCircle2 },
 ];
 
@@ -53,16 +63,23 @@ export default function LampLoginForm({
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim() || !password.trim() || (mode === "signup" && !name.trim())) {
+    if (
+      !email.trim() ||
+      !password.trim() ||
+      (mode === "signup" && !name.trim())
+    ) {
       toast.error("Please fill in all fields");
       return;
     }
     setSubmitting(true);
     try {
-      const u = mode === "login"
-        ? await login(email.trim(), password)
-        : await signup(name.trim(), email.trim(), password);
-      toast.success(mode === "login" ? `Welcome back, ${u.name}` : `Welcome, ${u.name}`);
+      const u =
+        mode === "login"
+          ? await login(email.trim(), password)
+          : await signup(name.trim(), email.trim(), password);
+      toast.success(
+        mode === "login" ? `Welcome back, ${u.name}` : `Welcome, ${u.name}`,
+      );
       navigate(homePathForRole(u.role), { replace: true });
     } catch (err: any) {
       toast.error(err?.message ?? "Authentication failed");
@@ -118,7 +135,14 @@ export default function LampLoginForm({
 
       <div style={{ position: "relative", zIndex: 2 }}>
         {/* Brand */}
-        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 22 }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            marginBottom: 22,
+          }}
+        >
           <div
             style={{
               width: 44,
@@ -134,7 +158,14 @@ export default function LampLoginForm({
             <Recycle style={{ width: 22, height: 22, color: "#0a0a0a" }} />
           </div>
           <div>
-            <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.5px", color: titleColor }}>
+            <div
+              style={{
+                fontSize: 22,
+                fontWeight: 700,
+                letterSpacing: "-0.5px",
+                color: titleColor,
+              }}
+            >
               EcoVoid
             </div>
             <div style={{ fontSize: 12, color: subColor }}>{tagline}</div>
@@ -172,7 +203,10 @@ export default function LampLoginForm({
                     ? `linear-gradient(135deg, rgba(${accent}, 0.9), rgba(${accent}, 0.55))`
                     : "transparent",
                 color: mode === m ? "#0a0a0a" : "rgba(255,255,255,0.6)",
-                boxShadow: mode === m ? `0 4px 12px rgba(${accent}, ${0.35 * I})` : "none",
+                boxShadow:
+                  mode === m
+                    ? `0 4px 12px rgba(${accent}, ${0.35 * I})`
+                    : "none",
               }}
             >
               {m === "login" ? "Login" : "Sign up"}
@@ -181,32 +215,67 @@ export default function LampLoginForm({
         </div>
 
         {/* Form */}
-        <form onSubmit={onSubmit} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        <form
+          onSubmit={onSubmit}
+          style={{ display: "flex", flexDirection: "column", gap: 12 }}
+        >
           {mode === "signup" && (
-            <FloatingLabelInput label="Full name" value={name} onChange={setName} />
+            <FloatingLabelInput
+              label="Full name"
+              value={name}
+              onChange={setName}
+            />
           )}
-          <FloatingLabelInput label="Email" type="email" value={email} onChange={setEmail} />
-          <FloatingLabelInput label="Password" type="password" value={password} onChange={setPassword} />
+          <FloatingLabelInput
+            label="Email"
+            type="email"
+            value={email}
+            onChange={setEmail}
+          />
+          <FloatingLabelInput
+            label="Password"
+            type="password"
+            value={password}
+            onChange={setPassword}
+          />
 
-          <div style={{ display: "flex", justifyContent: "center", marginTop: 8 }}>
+          <div
+            style={{ display: "flex", justifyContent: "center", marginTop: 8 }}
+          >
             <PremiumAuthButton
               theme="dark"
               variant={mode === "login" ? "login" : "signup"}
               accent={`rgb(${accent})`}
               label={mode === "login" ? "Login" : "Sign Up"}
               onLogin={() => {
-                if (!submitting) onSubmit({ preventDefault: () => {} } as React.FormEvent);
+                if (!submitting)
+                  onSubmit({ preventDefault: () => {} } as React.FormEvent);
               }}
               onSignup={() => {
-                if (!submitting) onSubmit({ preventDefault: () => {} } as React.FormEvent);
+                if (!submitting)
+                  onSubmit({ preventDefault: () => {} } as React.FormEvent);
               }}
             />
           </div>
         </form>
 
         {/* Demo chips */}
-        <div style={{ marginTop: 22, paddingTop: 18, borderTop: "1px solid rgba(255,255,255,0.08)" }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: subColor, marginBottom: 10, letterSpacing: "1px" }}>
+        <div
+          style={{
+            marginTop: 22,
+            paddingTop: 18,
+            borderTop: "1px solid rgba(255,255,255,0.08)",
+          }}
+        >
+          <div
+            style={{
+              fontSize: 11,
+              fontWeight: 700,
+              color: subColor,
+              marginBottom: 10,
+              letterSpacing: "1px",
+            }}
+          >
             DEMO ROLES
           </div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>

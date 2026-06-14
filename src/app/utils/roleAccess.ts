@@ -21,12 +21,24 @@ export const DRIVER_EXTRA_PATHS = new Set([
   "/fleet",
 ]);
 
+// Pages a center employee can access. They run the intake / verification desk.
+export const EMPLOYEE_PATHS = new Set([
+  "/verification",
+  "/pickups",
+  "/ai-validation",
+  "/centers-list",
+  "/settings",
+  "/support",
+]);
+
 // Pages that only admins can access (managers excluded)
 export const ADMIN_ONLY_PATHS = new Set(["/permissions", "/audit"]);
 
 /** The landing route a user should be sent to after login / from "/". */
 export function homePathForRole(role: Role): string {
-  return role === "citizen" ? "/portal" : "/overview";
+  if (role === "citizen") return "/portal";
+  if (role === "employee") return "/verification";
+  return "/overview";
 }
 
 export function canAccess(role: Role, path: string): boolean {
@@ -35,6 +47,9 @@ export function canAccess(role: Role, path: string): boolean {
   if (role === "manager") return !ADMIN_ONLY_PATHS.has(path);
   if (role === "driver") {
     return CITIZEN_PATHS.has(path) || DRIVER_EXTRA_PATHS.has(path);
+  }
+  if (role === "employee") {
+    return EMPLOYEE_PATHS.has(path);
   }
   // citizen
   return CITIZEN_PATHS.has(path);

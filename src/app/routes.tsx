@@ -1,4 +1,10 @@
-import { createBrowserRouter, Navigate, Outlet, useLocation, useParams } from "react-router";
+import {
+  createBrowserRouter,
+  Navigate,
+  Outlet,
+  useLocation,
+  useParams,
+} from "react-router";
 import { Toaster } from "sonner";
 import { useDirection } from "./hooks/useDirection";
 import { AuthProvider, useAuth } from "@/app/contexts/AuthContext";
@@ -65,7 +71,10 @@ import NotFoundPage from "./pages/NotFoundPage";
 function DirectionShell({ children }: { children: React.ReactNode }) {
   const { dir } = useDirection();
   return (
-    <div dir={dir} className="relative min-h-screen bg-[#d8edf8] dark:bg-[#070a0f] overflow-hidden">
+    <div
+      dir={dir}
+      className="relative min-h-screen bg-[#d8edf8] dark:bg-[#070a0f] overflow-hidden"
+    >
       {children}
     </div>
   );
@@ -76,21 +85,26 @@ function OverviewPage() {
   const { drivers } = useDrivers();
 
   const activePickups = requests.filter((r) => r.status !== "Completed").length;
-  const completedPickups = requests.filter((r) => r.status === "Completed").length;
+  const completedPickups = requests.filter(
+    (r) => r.status === "Completed",
+  ).length;
   const driversOnRoad = drivers.filter((d) => d.status === "active").length;
   const totalWeight = requests.reduce(
     (s, r) => s + r.items.reduce((a, i) => a + i.expectedWeightKg, 0),
-    0
+    0,
   );
-  const todayTonnage = Math.round((totalWeight * 1.8) * 10) / 10;
+  const todayTonnage = Math.round(totalWeight * 1.8 * 10) / 10;
   const fleetUtilization = Math.min(
     100,
-    Math.round((driversOnRoad / Math.max(drivers.length, 1)) * 100)
+    Math.round((driversOnRoad / Math.max(drivers.length, 1)) * 100),
   );
 
   return (
     <div className="max-w-[1600px] mx-auto p-6 space-y-6">
-      <OverviewHero activePickups={activePickups} driversOnRoad={driversOnRoad} />
+      <OverviewHero
+        activePickups={activePickups}
+        driversOnRoad={driversOnRoad}
+      />
       <OperationalKPIs
         activePickups={activePickups}
         driversOnRoad={driversOnRoad}
@@ -233,45 +247,271 @@ export const router = createBrowserRouter([
       { path: "login-d", Component: LoginPageLampD },
       { path: "test", Component: TestPage },
 
-      { path: "portal", element: <ProtectedRoute><CitizenPortalPage /></ProtectedRoute> },
-      { path: "overview", element: <ProtectedRoute allowedRoles={["admin", "manager", "driver"]}><OverviewPage /></ProtectedRoute> },
+      {
+        path: "portal",
+        element: (
+          <ProtectedRoute>
+            <CitizenPortalPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "overview",
+        element: (
+          <ProtectedRoute allowedRoles={["admin", "manager", "driver"]}>
+            <OverviewPage />
+          </ProtectedRoute>
+        ),
+      },
 
-      { path: "zones", element: <ProtectedRoute allowedRoles={["admin", "manager"]}><ZonesPage /></ProtectedRoute> },
-      { path: "centers", element: <ProtectedRoute allowedRoles={["admin", "manager"]}><CentersPage /></ProtectedRoute> },
-      { path: "alerts", element: <ProtectedRoute allowedRoles={["admin", "manager"]}><SmartAlertsPage /></ProtectedRoute> },
-      { path: "analytics", element: <ProtectedRoute allowedRoles={["admin", "manager"]}><AnalyticsPage /></ProtectedRoute> },
-      { path: "drivers", element: <ProtectedRoute allowedRoles={["admin", "manager"]}><DriversListPage /></ProtectedRoute> },
-      { path: "reports", element: <ProtectedRoute allowedRoles={["admin", "manager"]}><ReportsPage /></ProtectedRoute> },
-      { path: "performance", element: <ProtectedRoute allowedRoles={["admin", "manager"]}><PerformanceDashboardPage /></ProtectedRoute> },
-      { path: "resources", element: <ProtectedRoute allowedRoles={["admin", "manager"]}><ResourceManagementPage /></ProtectedRoute> },
-      { path: "communities", element: <ProtectedRoute allowedRoles={["admin", "manager"]}><CommunitiesMapPage /></ProtectedRoute> },
-      { path: "logistics", element: <ProtectedRoute allowedRoles={["admin", "manager"]}><LogisticsImpactPage /></ProtectedRoute> },
+      {
+        path: "zones",
+        element: (
+          <ProtectedRoute allowedRoles={["admin", "manager"]}>
+            <ZonesPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "centers",
+        element: (
+          <ProtectedRoute allowedRoles={["admin", "manager"]}>
+            <CentersPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "alerts",
+        element: (
+          <ProtectedRoute allowedRoles={["admin", "manager"]}>
+            <SmartAlertsPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "analytics",
+        element: (
+          <ProtectedRoute allowedRoles={["admin", "manager"]}>
+            <AnalyticsPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "drivers",
+        element: (
+          <ProtectedRoute allowedRoles={["admin", "manager"]}>
+            <DriversListPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "reports",
+        element: (
+          <ProtectedRoute allowedRoles={["admin", "manager"]}>
+            <ReportsPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "performance",
+        element: (
+          <ProtectedRoute allowedRoles={["admin", "manager"]}>
+            <PerformanceDashboardPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "resources",
+        element: (
+          <ProtectedRoute allowedRoles={["admin", "manager"]}>
+            <ResourceManagementPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "communities",
+        element: (
+          <ProtectedRoute allowedRoles={["admin", "manager"]}>
+            <CommunitiesMapPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "logistics",
+        element: (
+          <ProtectedRoute allowedRoles={["admin", "manager"]}>
+            <LogisticsImpactPage />
+          </ProtectedRoute>
+        ),
+      },
 
-      { path: "routes", element: <ProtectedRoute allowedRoles={["admin", "manager", "driver"]}><RoutesPage /></ProtectedRoute> },
-      { path: "schedule", element: <ProtectedRoute allowedRoles={["admin", "manager", "driver"]}><SchedulePage /></ProtectedRoute> },
-      { path: "pickups", element: <ProtectedRoute allowedRoles={["admin", "manager", "driver"]}><PickupRequestsPage /></ProtectedRoute> },
-      { path: "fleet", element: <ProtectedRoute allowedRoles={["admin", "manager", "driver"]}><FleetMapPage /></ProtectedRoute> },
+      {
+        path: "routes",
+        element: (
+          <ProtectedRoute allowedRoles={["admin", "manager", "driver"]}>
+            <RoutesPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "schedule",
+        element: (
+          <ProtectedRoute allowedRoles={["admin", "manager", "driver"]}>
+            <SchedulePage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "pickups",
+        element: (
+          <ProtectedRoute allowedRoles={["admin", "manager", "driver"]}>
+            <PickupRequestsPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "fleet",
+        element: (
+          <ProtectedRoute allowedRoles={["admin", "manager", "driver"]}>
+            <FleetMapPage />
+          </ProtectedRoute>
+        ),
+      },
 
-      { path: "citizen-stats", element: <ProtectedRoute><CitizenStatsPage /></ProtectedRoute> },
-      { path: "leaderboards", element: <ProtectedRoute><LeaderboardsPage /></ProtectedRoute> },
+      {
+        path: "citizen-stats",
+        element: (
+          <ProtectedRoute>
+            <CitizenStatsPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "leaderboards",
+        element: (
+          <ProtectedRoute>
+            <LeaderboardsPage />
+          </ProtectedRoute>
+        ),
+      },
       { path: "leaderboard", element: <Navigate to="/leaderboards" replace /> },
-      { path: "badges", element: <ProtectedRoute><BadgesPage /></ProtectedRoute> },
-      { path: "citizen-levels", element: <ProtectedRoute><CitizenLevelsPage /></ProtectedRoute> },
-      { path: "rewards", element: <ProtectedRoute><RewardsPage /></ProtectedRoute> },
-      { path: "settings", element: <ProtectedRoute><SettingsPage /></ProtectedRoute> },
-      { path: "support", element: <ProtectedRoute><SupportTicketsPage /></ProtectedRoute> },
+      {
+        path: "badges",
+        element: (
+          <ProtectedRoute>
+            <BadgesPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "citizen-levels",
+        element: (
+          <ProtectedRoute>
+            <CitizenLevelsPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "rewards",
+        element: (
+          <ProtectedRoute>
+            <RewardsPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "settings",
+        element: (
+          <ProtectedRoute>
+            <SettingsPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "support",
+        element: (
+          <ProtectedRoute>
+            <SupportTicketsPage />
+          </ProtectedRoute>
+        ),
+      },
 
-      { path: "centers-list", element: <ProtectedRoute allowedRoles={["admin", "manager"]}><CentersListPage /></ProtectedRoute> },
-      { path: "activity-log", element: <ProtectedRoute allowedRoles={["admin", "manager"]}><ActivityLogPage /></ProtectedRoute> },
-      { path: "ai-validation", element: <ProtectedRoute allowedRoles={["admin", "manager"]}><AiValidationPage /></ProtectedRoute> },
-      { path: "verification", element: <ProtectedRoute allowedRoles={["admin", "manager", "driver"]}><VerificationStationPage /></ProtectedRoute> },
-      { path: "sustainability", element: <ProtectedRoute allowedRoles={["admin", "manager"]}><SustainabilityPage /></ProtectedRoute> },
-      { path: "partners", element: <ProtectedRoute allowedRoles={["admin", "manager"]}><PartnersPage /></ProtectedRoute> },
+      {
+        path: "centers-list",
+        element: (
+          <ProtectedRoute allowedRoles={["admin", "manager"]}>
+            <CentersListPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "activity-log",
+        element: (
+          <ProtectedRoute allowedRoles={["admin", "manager"]}>
+            <ActivityLogPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "ai-validation",
+        element: (
+          <ProtectedRoute allowedRoles={["admin", "manager"]}>
+            <AiValidationPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "verification",
+        element: (
+          <ProtectedRoute
+            allowedRoles={["admin", "manager", "driver", "employee"]}
+          >
+            <VerificationStationPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "sustainability",
+        element: (
+          <ProtectedRoute allowedRoles={["admin", "manager"]}>
+            <SustainabilityPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "partners",
+        element: (
+          <ProtectedRoute allowedRoles={["admin", "manager"]}>
+            <PartnersPage />
+          </ProtectedRoute>
+        ),
+      },
 
-      { path: "audit", element: <ProtectedRoute allowedRoles={["admin"]}><AuditLogPage /></ProtectedRoute> },
-      { path: "permissions", element: <ProtectedRoute allowedRoles={["admin"]}><PermissionsPage /></ProtectedRoute> },
+      {
+        path: "audit",
+        element: (
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <AuditLogPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "permissions",
+        element: (
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <PermissionsPage />
+          </ProtectedRoute>
+        ),
+      },
 
-      { path: "*", element: <ProtectedRoute><PlaceholderRoute /></ProtectedRoute> },
+      {
+        path: "*",
+        element: (
+          <ProtectedRoute>
+            <PlaceholderRoute />
+          </ProtectedRoute>
+        ),
+      },
     ],
   },
 ]);

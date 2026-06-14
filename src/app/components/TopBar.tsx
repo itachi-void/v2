@@ -224,6 +224,11 @@ export default function TopBar() {
       fg: "text-violet-700 dark:text-violet-300",
       label: "Citizen",
     },
+    employee: {
+      bg: "bg-fuchsia-500/15",
+      fg: "text-fuchsia-700 dark:text-fuchsia-300",
+      label: "Employee",
+    },
   };
   const rAcc = roleAccents[role];
 
@@ -503,30 +508,36 @@ export default function TopBar() {
                       </div>
                     )}
                     {role === "admin" &&
-                      (["admin", "manager", "driver", "citizen"] as Role[]).map(
-                        (r) => (
-                          <button
-                            key={r}
-                            onClick={() => handleSwitchRole(r)}
-                            className={`w-full flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-sm hover:bg-slate-50 dark:hover:bg-white/5 ${
-                              r === role
-                                ? "text-slate-900 dark:text-white"
-                                : "text-slate-600 dark:text-white/70"
-                            }`}
-                          >
-                            <Repeat className="w-3.5 h-3.5" />
-                            {roleAccents[r].label}
-                            {r === role && (
-                              <span
-                                className="ml-auto text-[10px] text-emerald-600 dark:text-emerald-400"
-                                style={{ fontWeight: 700 }}
-                              >
-                                active
-                              </span>
-                            )}
-                          </button>
-                        ),
-                      )}
+                      (
+                        [
+                          "admin",
+                          "manager",
+                          "driver",
+                          "employee",
+                          "citizen",
+                        ] as Role[]
+                      ).map((r) => (
+                        <button
+                          key={r}
+                          onClick={() => handleSwitchRole(r)}
+                          className={`w-full flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-sm hover:bg-slate-50 dark:hover:bg-white/5 ${
+                            r === role
+                              ? "text-slate-900 dark:text-white"
+                              : "text-slate-600 dark:text-white/70"
+                          }`}
+                        >
+                          <Repeat className="w-3.5 h-3.5" />
+                          {roleAccents[r].label}
+                          {r === role && (
+                            <span
+                              className="ml-auto text-[10px] text-emerald-600 dark:text-emerald-400"
+                              style={{ fontWeight: 700 }}
+                            >
+                              active
+                            </span>
+                          )}
+                        </button>
+                      ))}
                     <div className="my-1 border-t border-slate-100 dark:border-white/5" />
                     <div className="flex justify-center py-2">
                       <PremiumAuthButton
