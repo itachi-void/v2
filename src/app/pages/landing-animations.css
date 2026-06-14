@@ -1,0 +1,21 @@
+/* Supplemental keyframes for the landing page. Most motion is handled by Motion;
+   these are lightweight CSS-only accents. */
+
+@keyframes landing-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+.landing-float {
+  animation: landing-float 6s ease-in-out infinite;
+}
+
+@keyframes landing-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.landing-shimmer {
+  background-size: 200% 100%;
+  animation: landing-shimmer 2s linear infinite;
+}
