@@ -148,6 +148,10 @@ export default function TopBar() {
     ...(role === "citizen"
       ? [{ to: "/portal", label: "Home", icon: Home }]
       : []),
+    // Drivers get a dedicated operational overview as their home.
+    ...(role === "driver"
+      ? [{ to: "/driver-home", label: "Home", icon: Home }]
+      : []),
     ...mainTabs.filter((t) => canAccess(role, t.to)),
   ];
   const visibleMoreGroups = moreGroups

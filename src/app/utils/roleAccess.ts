@@ -15,10 +15,12 @@ export const CITIZEN_PATHS = new Set([
 
 // Additional pages drivers can access (on top of citizen paths)
 export const DRIVER_EXTRA_PATHS = new Set([
+  "/driver-home",
   "/routes",
   "/schedule",
   "/pickups",
   "/fleet",
+  "/verification",
 ]);
 
 // Pages a center employee can access. They run the intake / verification desk.
@@ -38,6 +40,7 @@ export const ADMIN_ONLY_PATHS = new Set(["/permissions", "/audit"]);
 export function homePathForRole(role: Role): string {
   if (role === "citizen") return "/portal";
   if (role === "employee") return "/verification";
+  if (role === "driver") return "/driver-home";
   return "/overview";
 }
 
