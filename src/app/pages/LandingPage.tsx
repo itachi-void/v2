@@ -990,9 +990,9 @@ export default function LandingPage() {
               </p>
               <div className="flex flex-wrap gap-2 justify-center">
                 {[
-                  { to: "/login-a", label: "Emerald", dot: "#86efac" },
-                  { to: "/login-b", label: "Cinematic", dot: "#ffc678" },
-                  { to: "/login-c", label: "Teal", dot: "#5eead4" },
+                  // { to: "/login-a", label: "Emerald", dot: "#86efac" },
+                  // { to: "/login-b", label: "Cinematic", dot: "#ffc678" },
+                  // { to: "/login-c", label: "Teal", dot: "#5eead4" },
                   { to: "/login-d", label: "Forest", dot: "#a7f3d0" },
                   { to: "/404", label: "404", dot: "#f59e0b" },
                 ].map((r) => (
