@@ -977,6 +977,37 @@ export default function LandingPage() {
                 Watch Demo
               </motion.button>
             </motion.div>
+
+            {/* أزرار تجربة تصاميم الـ Lamp login / 404 */}
+            <motion.div
+              className="mt-8 flex flex-col items-center gap-3"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8, duration: 0.6 }}
+            >
+              <p className="text-xs uppercase tracking-[3px] text-slate-400 dark:text-white/40" style={{ fontWeight: 700 }}>
+                Try the Lamp concepts
+              </p>
+              <div className="flex flex-wrap gap-2 justify-center">
+                {[
+                  { to: "/login-a", label: "Emerald", dot: "#86efac" },
+                  { to: "/login-b", label: "Cinematic", dot: "#ffc678" },
+                  { to: "/login-c", label: "Teal", dot: "#5eead4" },
+                  { to: "/login-d", label: "Forest", dot: "#a7f3d0" },
+                  { to: "/404", label: "404", dot: "#f59e0b" },
+                ].map((r) => (
+                  <Link
+                    key={r.to}
+                    to={r.to}
+                    className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm text-slate-700 dark:text-slate-200 hover:border-emerald-400 dark:hover:border-emerald-400 hover:text-emerald-600 dark:hover:text-emerald-300 transition-colors backdrop-blur"
+                    style={{ fontWeight: 600 }}
+                  >
+                    <span className="w-2.5 h-2.5 rounded-full" style={{ background: r.dot }} />
+                    {r.label}
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
           </motion.div>
         </div>
       </section>
