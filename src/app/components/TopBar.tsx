@@ -125,12 +125,18 @@ export default function TopBar() {
   const [userOpen, setUserOpen] = useState(false);
   const [logoutAnimating, setLogoutAnimating] = useState(false);
   const moreRef = useRef<HTMLDivElement>(null);
+  const moreMenuRef = useRef<HTMLDivElement>(null);
   const userRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const [userMenuPos, setUserMenuPos] = useState<{
     top: number;
     right: number;
   }>({ top: 0, right: 0 });
+  const [morePos, setMorePos] = useState<{
+    top: number;
+    left: number;
+    width: number;
+  }>({ top: 0, left: 0, width: 720 });
   const location = useLocation();
   const navigate = useNavigate();
   const { resolvedTheme, setTheme } = useTheme();
@@ -158,8 +164,11 @@ export default function TopBar() {
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
       const target = e.target as Node;
-      if (moreRef.current && !moreRef.current.contains(target))
-        setMoreOpen(false);
+      // The More mega-menu is portaled — treat clicks inside it (or its trigger) as inside.
+      const insideMore =
+        (moreRef.current && moreRef.current.contains(target)) ||
+        (moreMenuRef.current && moreMenuRef.current.contains(target));
+      if (!insideMore) setMoreOpen(false);
       // The user menu is rendered through a portal, so an in-menu click is not
       // inside userRef — check the portaled menu element too.
       const insideUser =
@@ -190,6 +199,28 @@ export default function TopBar() {
       window.removeEventListener("scroll", update, true);
     };
   }, [userOpen]);
+
+  // Position the portaled More mega-menu under its trigger, clamped to viewport.
+  useEffect(() => {
+    if (!moreOpen) return;
+    const update = () => {
+      const r = moreRef.current?.getBoundingClientRect();
+      if (!r) return;
+      const cols = Math.min(visibleMoreGroups.length, 3) || 1;
+      const width = Math.min(cols * 240, window.innerWidth - 16);
+      // Right-align to the trigger, then clamp so it never leaves the viewport.
+      let left = r.right - width;
+      left = Math.max(8, Math.min(left, window.innerWidth - width - 8));
+      setMorePos({ top: r.bottom + 8, left, width });
+    };
+    update();
+    window.addEventListener("resize", update);
+    window.addEventListener("scroll", update, true);
+    return () => {
+      window.removeEventListener("resize", update);
+      window.removeEventListener("scroll", update, true);
+    };
+  }, [moreOpen, visibleMoreGroups.length]);
 
   const moreActive = visibleMoreFlat.some((m) =>
     location.pathname.startsWith(m.to),
@@ -314,85 +345,103 @@ export default function TopBar() {
               />
             </button>
 
-            {moreOpen && (
-              <div className="absolute right-0 top-full mt-2 w-[720px] bg-white/95 dark:bg-[#0a0e14]/80 backdrop-blur-2xl rounded-3xl border border-slate-200 dark:border-white/10 shadow-2xl shadow-slate-900/10 dark:shadow-black/40 overflow-hidden">
-                {/* Header */}
-                <div className="flex items-center justify-between px-6 pt-5 pb-3 border-b border-slate-100 dark:border-white/5">
-                  <span className="text-[10px] font-extrabold uppercase tracking-[2px] text-slate-400 dark:text-white/40">
-                    Secondary Operations & Citizens Control
-                  </span>
-                  <span className="text-[10px] font-extrabold uppercase tracking-[2px] text-cyan-600 dark:text-cyan-400">
-                    EcoVoid Smart Systems
-                  </span>
-                </div>
-
-                {/* Three-column grid */}
-                <div className="grid grid-cols-3 gap-6 px-6 py-5">
-                  {visibleMoreGroups.map((group) => (
-                    <div key={group.title}>
-                      <div className="text-[10px] font-extrabold uppercase tracking-[1.5px] text-cyan-600 dark:text-cyan-400 mb-3">
-                        {group.title}
-                      </div>
-                      <div className="flex flex-col gap-0.5">
-                        {group.items.map((m) => (
-                          <NavLink
-                            key={m.to}
-                            to={m.to}
-                            className={({ isActive }) =>
-                              `flex items-center gap-2.5 px-2 py-2 rounded-lg transition-all ${
-                                isActive
-                                  ? "bg-cyan-50 dark:bg-cyan-500/10 text-cyan-700 dark:text-cyan-300"
-                                  : "text-slate-700 dark:text-white/75 hover:bg-slate-50 dark:hover:bg-white/5"
-                              }`
-                            }
-                          >
-                            <m.icon className="w-4 h-4 text-slate-400 dark:text-white/40 shrink-0" />
-                            <span className="text-xs font-semibold truncate">
-                              {m.label}
-                            </span>
-                          </NavLink>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Wavy decoration + logout */}
-                <div className="relative h-16 border-t border-slate-100 dark:border-white/5 overflow-hidden">
-                  <svg
-                    className="absolute inset-x-0 bottom-0 w-full h-full"
-                    viewBox="0 0 720 64"
-                    preserveAspectRatio="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0,40 C120,10 240,55 360,32 C480,10 600,50 720,28 L720,64 L0,64 Z"
-                      fill="rgba(34,211,238,0.10)"
-                    />
-                    <path
-                      d="M0,46 C140,22 260,58 380,40 C500,22 620,55 720,38"
-                      fill="none"
-                      stroke="rgba(34,211,238,0.45)"
-                      strokeWidth="1.5"
-                    />
-                    <path
-                      d="M0,52 C150,32 280,62 400,48 C520,34 640,60 720,46"
-                      fill="none"
-                      stroke="rgba(132,204,22,0.4)"
-                      strokeWidth="1.2"
-                    />
-                  </svg>
-                  <div className="absolute right-4 bottom-2">
-                    <PremiumAuthButton
-                      theme="light"
-                      variant="logout"
-                      accent="#f43f5e"
-                      onLogout={handleLogout}
-                    />
+            {moreOpen &&
+              createPortal(
+                <div
+                  ref={moreMenuRef}
+                  className="fixed bg-white/95 dark:bg-[#0a0e14]/80 backdrop-blur-2xl rounded-3xl border border-slate-200 dark:border-white/10 shadow-2xl shadow-slate-900/10 dark:shadow-black/40 overflow-hidden z-[200]"
+                  style={{
+                    top: morePos.top,
+                    left: morePos.left,
+                    width: morePos.width,
+                  }}
+                >
+                  {/* Header */}
+                  <div className="flex items-center justify-between px-6 pt-5 pb-3 border-b border-slate-100 dark:border-white/5">
+                    <span className="text-[10px] font-extrabold uppercase tracking-[2px] text-slate-400 dark:text-white/40">
+                      Secondary Operations & Citizens Control
+                    </span>
+                    <span className="text-[10px] font-extrabold uppercase tracking-[2px] text-cyan-600 dark:text-cyan-400">
+                      EcoVoid Smart Systems
+                    </span>
                   </div>
-                </div>
-              </div>
-            )}
+
+                  {/* Adaptive column grid */}
+                  <div
+                    className="grid gap-6 px-6 py-5"
+                    style={{
+                      gridTemplateColumns: `repeat(${Math.min(visibleMoreGroups.length, 3)}, minmax(0, 1fr))`,
+                    }}
+                  >
+                    {visibleMoreGroups.map((group) => (
+                      <div key={group.title}>
+                        <div className="text-[10px] font-extrabold uppercase tracking-[1.5px] text-cyan-600 dark:text-cyan-400 mb-3">
+                          {group.title}
+                        </div>
+                        <div className="flex flex-col gap-0.5">
+                          {group.items.map((m) => (
+                            <NavLink
+                              key={m.to}
+                              to={m.to}
+                              className={({ isActive }) =>
+                                `flex items-center gap-2.5 px-2 py-2 rounded-lg transition-all ${
+                                  isActive
+                                    ? "bg-cyan-50 dark:bg-cyan-500/10 text-cyan-700 dark:text-cyan-300"
+                                    : "text-slate-700 dark:text-white/75 hover:bg-slate-50 dark:hover:bg-white/5"
+                                }`
+                              }
+                            >
+                              <m.icon className="w-4 h-4 text-slate-400 dark:text-white/40 shrink-0" />
+                              <span className="text-xs font-semibold truncate">
+                                {m.label}
+                              </span>
+                            </NavLink>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Wavy decoration + logout */}
+                  <div className="relative h-16 border-t border-slate-100 dark:border-white/5">
+                    {/* Wave is clipped on its own layer so it can't crop the button */}
+                    <div className="absolute inset-0 overflow-hidden rounded-b-3xl pointer-events-none">
+                      <svg
+                        className="absolute inset-x-0 bottom-0 w-full h-full"
+                        viewBox="0 0 720 64"
+                        preserveAspectRatio="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M0,40 C120,10 240,55 360,32 C480,10 600,50 720,28 L720,64 L0,64 Z"
+                          fill="rgba(34,211,238,0.10)"
+                        />
+                        <path
+                          d="M0,46 C140,22 260,58 380,40 C500,22 620,55 720,38"
+                          fill="none"
+                          stroke="rgba(34,211,238,0.45)"
+                          strokeWidth="1.5"
+                        />
+                        <path
+                          d="M0,52 C150,32 280,62 400,48 C520,34 640,60 720,46"
+                          fill="none"
+                          stroke="rgba(132,204,22,0.4)"
+                          strokeWidth="1.2"
+                        />
+                      </svg>
+                    </div>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <PremiumAuthButton
+                        theme="light"
+                        variant="logout"
+                        accent="#f43f5e"
+                        onLogout={handleLogout}
+                      />
+                    </div>
+                  </div>
+                </div>,
+                document.body,
+              )}
           </div>
         </nav>
 
