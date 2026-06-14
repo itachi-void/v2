@@ -26,6 +26,8 @@ export const DRIVER_EXTRA_PATHS = new Set([
 // Pages a center employee can access. They run the intake / verification desk.
 export const EMPLOYEE_PATHS = new Set([
   "/verification",
+  "/employee-history",
+  "/employee-profile",
   "/pickups",
   "/ai-validation",
   "/centers-list",

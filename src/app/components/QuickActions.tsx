@@ -1,13 +1,5 @@
 import { useNavigate } from "react-router";
-import {
-  Zap,
-  MapPin,
-  Users,
-  Activity,
-  ScanLine,
-  LucideIcon,
-  ArrowUpRight,
-} from "lucide-react";
+import { Zap, MapPin, Users, Activity, ScanLine, LucideIcon, ArrowUpRight } from "lucide-react";
 
 interface Action {
   label: string;
@@ -68,10 +60,7 @@ export default function QuickActions() {
     <section>
       <div className="flex items-center gap-2 mb-3 px-1">
         <span className="w-1 h-1 rounded-full bg-emerald-500" />
-        <h2
-          className="text-[10px] uppercase tracking-[2px] text-slate-500 dark:text-white/50"
-          style={{ fontWeight: 800 }}
-        >
+        <h2 className="text-[10px] uppercase tracking-[2px] text-slate-500 dark:text-white/50" style={{ fontWeight: 800 }}>
           Quick Actions
         </h2>
       </div>
@@ -83,20 +72,14 @@ export default function QuickActions() {
             className="group relative overflow-hidden rounded-3xl bg-white/80 dark:bg-[#0a0e14]/40 backdrop-blur-2xl border border-slate-200 dark:border-white/10 shadow-[0_4px_16px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] hover:-translate-y-0.5 transition-all p-5 text-left"
           >
             <div className="flex items-start justify-between">
-              <div
-                className={`w-10 h-10 rounded-xl ${glow} flex items-center justify-center`}
-              >
+              <div className={`w-10 h-10 rounded-xl ${glow} flex items-center justify-center`}>
                 <Icon className={`w-5 h-5 ${tone}`} />
               </div>
               <ArrowUpRight className="w-4 h-4 text-slate-300 dark:text-white/20 group-hover:text-slate-500 dark:group-hover:text-white/50 transition-colors" />
             </div>
             <div className="mt-4">
-              <div className="text-sm font-bold text-slate-900 dark:text-white tracking-tight">
-                {label}
-              </div>
-              <div className="text-[11px] text-slate-500 dark:text-white/45 mt-0.5 font-medium">
-                {desc}
-              </div>
+              <div className="text-sm font-bold text-slate-900 dark:text-white tracking-tight">{label}</div>
+              <div className="text-[11px] text-slate-500 dark:text-white/45 mt-0.5 font-medium">{desc}</div>
             </div>
           </button>
         ))}

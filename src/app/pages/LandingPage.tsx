@@ -985,22 +985,22 @@ export default function LandingPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8, duration: 0.6 }}
             >
-              <p className="text-sm uppercase tracking-[3px] text-slate-900 dark:text-white/70" style={{ fontWeight: 800 }}>
+              <p className="text-xs uppercase tracking-[3px] text-slate-400 dark:text-white/40" style={{ fontWeight: 700 }}>
                 Try the Lamp concepts
               </p>
               <div className="flex flex-wrap gap-2 justify-center">
                 {[
-                  // { to: "/login-a", label: "Emerald", dot: "#86efac" },
-                  // { to: "/login-b", label: "Cinematic", dot: "#ffc678" },
-                  // { to: "/login-c", label: "Teal", dot: "#5eead4" },
+                  { to: "/login-a", label: "Emerald", dot: "#86efac" },
+                  { to: "/login-b", label: "Cinematic", dot: "#ffc678" },
+                  { to: "/login-c", label: "Teal", dot: "#5eead4" },
                   { to: "/login-d", label: "Forest", dot: "#a7f3d0" },
                   { to: "/404", label: "404", dot: "#f59e0b" },
                 ].map((r) => (
                   <Link
                     key={r.to}
                     to={r.to}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white shadow-md dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 text-sm font-bold text-slate-900 dark:text-white hover:border-emerald-500 dark:hover:border-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 hover:shadow-lg transition-all"
-                    style={{ fontWeight: 700 }}
+                    className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm text-slate-700 dark:text-slate-200 hover:border-emerald-400 dark:hover:border-emerald-400 hover:text-emerald-600 dark:hover:text-emerald-300 transition-colors backdrop-blur"
+                    style={{ fontWeight: 600 }}
                   >
                     <span className="w-2.5 h-2.5 rounded-full" style={{ background: r.dot }} />
                     {r.label}

@@ -1,11 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  ReactNode,
-  useCallback,
-} from "react";
+import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from "react";
 
 export type Role = "admin" | "manager" | "driver" | "citizen" | "employee";
 
@@ -67,59 +60,48 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     else localStorage.removeItem(STORAGE_KEY);
   }, []);
 
-  const login = useCallback(
-    async (email: string, password: string) => {
-      if (!email || !password)
-        throw new Error("Email and password are required");
-      await new Promise((r) => setTimeout(r, 600));
-      const role = inferRole(email);
-      const u: AuthUser = {
-        id: `usr_${Date.now()}`,
-        name: nameFromEmail(email),
-        email,
-        role,
-      };
-      setUser(u);
-      persist(u);
-      return u;
-    },
-    [persist],
-  );
+  const login = useCallback(async (email: string, password: string) => {
+    if (!email || !password) throw new Error("Email and password are required");
+    await new Promise((r) => setTimeout(r, 600));
+    const role = inferRole(email);
+    const u: AuthUser = {
+      id: `usr_${Date.now()}`,
+      name: nameFromEmail(email),
+      email,
+      role,
+    };
+    setUser(u);
+    persist(u);
+    return u;
+  }, [persist]);
 
-  const signup = useCallback(
-    async (name: string, email: string, password: string) => {
-      if (!name || !email || !password)
-        throw new Error("All fields are required");
-      await new Promise((r) => setTimeout(r, 600));
-      const u: AuthUser = {
-        id: `usr_${Date.now()}`,
-        name,
-        email,
-        role: "citizen",
-      };
-      setUser(u);
-      persist(u);
-      return u;
-    },
-    [persist],
-  );
+  const signup = useCallback(async (name: string, email: string, password: string) => {
+    if (!name || !email || !password) throw new Error("All fields are required");
+    await new Promise((r) => setTimeout(r, 600));
+    const u: AuthUser = {
+      id: `usr_${Date.now()}`,
+      name,
+      email,
+      role: "citizen",
+    };
+    setUser(u);
+    persist(u);
+    return u;
+  }, [persist]);
 
   const logout = useCallback(() => {
     setUser(null);
     persist(null);
   }, [persist]);
 
-  const setRole = useCallback(
-    (role: Role) => {
-      setUser((prev) => {
-        if (!prev) return prev;
-        const next = { ...prev, role };
-        persist(next);
-        return next;
-      });
-    },
-    [persist],
-  );
+  const setRole = useCallback((role: Role) => {
+    setUser((prev) => {
+      if (!prev) return prev;
+      const next = { ...prev, role };
+      persist(next);
+      return next;
+    });
+  }, [persist]);
 
   return (
     <AuthContext.Provider

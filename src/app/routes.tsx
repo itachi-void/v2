@@ -7,6 +7,7 @@ import { PickupProvider, usePickup } from "@/app/contexts/PickupContext";
 import { DriversProvider, useDrivers } from "@/app/contexts/DriversContext";
 import { PartnersProvider } from "@/app/contexts/PartnersContext";
 import { NotificationProvider } from "@/app/contexts/NotificationContext";
+import { VerificationHistoryProvider } from "@/app/contexts/VerificationHistoryContext";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import TopBar from "./components/TopBar";
 import CommandPalette from "./components/CommandPalette";
@@ -40,6 +41,8 @@ import SupportTicketsPage from "./pages/SupportTicketsPage";
 import AiValidationPage from "./pages/AiValidationPage";
 import VerificationStationPage from "./pages/VerificationStationPage";
 import DriverOverviewPage from "./pages/DriverOverviewPage";
+import EmployeeHistoryPage from "./pages/EmployeeHistoryPage";
+import EmployeeProfilePage from "./pages/EmployeeProfilePage";
 import FleetMapPage from "./pages/FleetMapPage";
 import PickupRequestsPage from "./pages/PickupRequestsPage";
 import SustainabilityPage from "./pages/SustainabilityPage";
@@ -203,12 +206,14 @@ function Root() {
           <DriversProvider>
             <PartnersProvider>
               <NotificationProvider>
+                <VerificationHistoryProvider>
                 <DirectionShell>
                   {!isLanding && <WaveBackdrop />}
                   <div className="relative z-10">
                     <Shell />
                   </div>
                 </DirectionShell>
+                </VerificationHistoryProvider>
               </NotificationProvider>
             </PartnersProvider>
           </DriversProvider>
@@ -267,6 +272,8 @@ export const router = createBrowserRouter([
       { path: "activity-log", element: <ProtectedRoute allowedRoles={["admin", "manager"]}><ActivityLogPage /></ProtectedRoute> },
       { path: "ai-validation", element: <ProtectedRoute allowedRoles={["admin", "manager"]}><AiValidationPage /></ProtectedRoute> },
       { path: "verification", element: <ProtectedRoute allowedRoles={["admin", "manager", "driver", "employee"]}><VerificationStationPage /></ProtectedRoute> },
+      { path: "employee-history", element: <ProtectedRoute allowedRoles={["admin", "manager", "employee"]}><EmployeeHistoryPage /></ProtectedRoute> },
+      { path: "employee-profile", element: <ProtectedRoute allowedRoles={["admin", "manager", "employee"]}><EmployeeProfilePage /></ProtectedRoute> },
       { path: "sustainability", element: <ProtectedRoute allowedRoles={["admin", "manager"]}><SustainabilityPage /></ProtectedRoute> },
       { path: "partners", element: <ProtectedRoute allowedRoles={["admin", "manager"]}><PartnersPage /></ProtectedRoute> },
 
