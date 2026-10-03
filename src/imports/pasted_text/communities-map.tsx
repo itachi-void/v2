@@ -139,7 +139,7 @@ export default function CommunitiesMap() {
   const { theme } = useTheme();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCommunity, setSelectedCommunity] = useState<Community | null>(
-    mockCommunities[0]
+    mockCommunities[0],
   );
   const [showFilters, setShowFilters] = useState(false);
   const [filterType, setFilterType] = useState<string>("all");
@@ -147,7 +147,9 @@ export default function CommunitiesMap() {
   const [mapZoom, setMapZoom] = useState(12);
 
   const filteredCommunities = mockCommunities.filter((c) => {
-    const matchSearch = c.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchSearch = c.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
     const matchType = filterType === "all" || c.type === filterType;
     const matchStatus = filterStatus === "all" || c.status === filterStatus;
     return matchSearch && matchType && matchStatus;
@@ -177,7 +179,7 @@ export default function CommunitiesMap() {
               <Sparkles className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-white">RecycleHub</h1>
+              <h1 className="text-xl font-bold text-white">EcoSnap</h1>
               <p className="text-xs text-gray-400">Community Finder</p>
             </div>
           </div>
@@ -232,7 +234,9 @@ export default function CommunitiesMap() {
               </select>
             </div>
             <div>
-              <label className="text-xs text-gray-400 mb-1.5 block">Status</label>
+              <label className="text-xs text-gray-400 mb-1.5 block">
+                Status
+              </label>
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
@@ -273,7 +277,9 @@ export default function CommunitiesMap() {
                       </h3>
                       <div className="flex items-center gap-1 text-yellow-400 flex-shrink-0">
                         <Star className="w-3.5 h-3.5 fill-current" />
-                        <span className="text-xs font-medium">{community.rating}</span>
+                        <span className="text-xs font-medium">
+                          {community.rating}
+                        </span>
                       </div>
                     </div>
 
@@ -283,7 +289,9 @@ export default function CommunitiesMap() {
                         {community.distance} km away
                       </span>
                       <span className="text-xs text-gray-600">•</span>
-                      <span className={`text-xs capitalize ${getTypeColor(community.type)}`}>
+                      <span
+                        className={`text-xs capitalize ${getTypeColor(community.type)}`}
+                      >
                         {community.type}
                       </span>
                     </div>
@@ -375,7 +383,7 @@ export default function CommunitiesMap() {
           {selectedCommunity && (
             <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
               <path
-                d={`M 10% 90% Q 30% 70%, 50% 50% T ${(filteredCommunities.findIndex((c) => c.id === selectedCommunity.id) * 15) % 70 + 15}% ${(filteredCommunities.findIndex((c) => c.id === selectedCommunity.id) * 37) % 60 + 20}%`}
+                d={`M 10% 90% Q 30% 70%, 50% 50% T ${((filteredCommunities.findIndex((c) => c.id === selectedCommunity.id) * 15) % 70) + 15}% ${((filteredCommunities.findIndex((c) => c.id === selectedCommunity.id) * 37) % 60) + 20}%`}
                 stroke="url(#emeraldGradient)"
                 strokeWidth="3"
                 fill="none"
@@ -383,7 +391,13 @@ export default function CommunitiesMap() {
                 className="animate-pulse"
               />
               <defs>
-                <linearGradient id="emeraldGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <linearGradient
+                  id="emeraldGradient"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="0%"
+                >
                   <stop offset="0%" stopColor="#10b981" stopOpacity="0.3" />
                   <stop offset="50%" stopColor="#10b981" stopOpacity="1" />
                   <stop offset="100%" stopColor="#0d9488" stopOpacity="0.3" />
@@ -479,7 +493,9 @@ export default function CommunitiesMap() {
                       {selectedCommunity.status === "active" ? (
                         <div className="flex items-center gap-1.5 text-emerald-400">
                           <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-                          <span className="text-sm">{selectedCommunity.activeUntil}</span>
+                          <span className="text-sm">
+                            {selectedCommunity.activeUntil}
+                          </span>
                         </div>
                       ) : (
                         <span className="text-sm text-gray-500">Inactive</span>

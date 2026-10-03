@@ -80,7 +80,7 @@ const ROUTE_ITEMS: { to: string; label: string; icon: any; keywords?: string }[]
   { to: "/settings", label: "Settings", icon: Settings },
 ];
 
-const RECENT_KEY = "ecovoid.recentRoutes.v1";
+const RECENT_KEY = "EcoSnap.recentRoutes.v1";
 
 function fuzzy(haystack: string, needle: string): number {
   if (!needle) return 1;

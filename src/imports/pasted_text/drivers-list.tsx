@@ -34,11 +34,7 @@ import { AddDriverDialog } from "../../components/AddDriverDialog";
 import { EditDriverDialog } from "../../components/EditDriverDialog";
 import { useDrivers } from "@/app/contexts/DriversContext";
 
-type DriverStatus =
-  | "active"
-  | "inactive"
-  | "on-leave"
-  | "available";
+type DriverStatus = "active" | "inactive" | "on-leave" | "available";
 
 interface Driver {
   id: string;
@@ -63,7 +59,7 @@ const driversData: Driver[] = [
     id: "DRV-001",
     name: "Ahmed Hassan",
     phone: "+966 50 123 4567",
-    email: "ahmed@recyclehub.com",
+    email: "ahmed@EcoSnap.com",
     status: "active",
     currentRoute: "Route #12",
     completedTrips: 248,
@@ -80,7 +76,7 @@ const driversData: Driver[] = [
     id: "DRV-002",
     name: "Mohammed Ali",
     phone: "+966 55 234 5678",
-    email: "mohammed@recyclehub.com",
+    email: "mohammed@EcoSnap.com",
     status: "active",
     currentRoute: "Route #8",
     completedTrips: 312,
@@ -97,7 +93,7 @@ const driversData: Driver[] = [
     id: "DRV-003",
     name: "Khalid Ibrahim",
     phone: "+966 54 345 6789",
-    email: "khalid@recyclehub.com",
+    email: "khalid@EcoSnap.com",
     status: "available",
     currentRoute: "-",
     completedTrips: 189,
@@ -114,7 +110,7 @@ const driversData: Driver[] = [
     id: "DRV-004",
     name: "Fahad Yousef",
     phone: "+966 56 456 7890",
-    email: "fahad@recyclehub.com",
+    email: "fahad@EcoSnap.com",
     status: "inactive",
     currentRoute: "-",
     completedTrips: 156,
@@ -131,7 +127,7 @@ const driversData: Driver[] = [
     id: "DRV-005",
     name: "Omar Abdullah",
     phone: "+966 53 567 8901",
-    email: "omar@recyclehub.com",
+    email: "omar@EcoSnap.com",
     status: "on-leave",
     currentRoute: "-",
     completedTrips: 203,
@@ -149,11 +145,8 @@ const driversData: Driver[] = [
 export default function Drivers() {
   const [drivers, setDrivers] = useState<Driver[]>(driversData);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterStatus, setFilterStatus] = useState<
-    "all" | DriverStatus
-  >("all");
-  const [selectedDriver, setSelectedDriver] =
-    useState<Driver | null>(null);
+  const [filterStatus, setFilterStatus] = useState<"all" | DriverStatus>("all");
+  const [selectedDriver, setSelectedDriver] = useState<Driver | null>(null);
   const [isAddDriverOpen, setIsAddDriverOpen] = useState(false);
   const [isEditDriverOpen, setIsEditDriverOpen] = useState(false);
   const [driverToEdit, setDriverToEdit] = useState<Driver | null>(null);
@@ -169,20 +162,33 @@ export default function Drivers() {
   // Function to add new driver
   const handleAddDriver = (newDriverData: any) => {
     const newDriver: Driver = {
-      id: `DRV-${String(drivers.length + 1).padStart(3, '0')}`,
+      id: `DRV-${String(drivers.length + 1).padStart(3, "0")}`,
       name: newDriverData.name || "New Driver",
       phone: newDriverData.phone || "+20 123 456 7890",
-      email: newDriverData.email || "driver@recyclehub.com",
+      email: newDriverData.email || "driver@EcoSnap.com",
       status: "available",
       currentRoute: newDriverData.route ? `Route ${newDriverData.route}` : "-",
-      completedTrips: newDriverData.completedTrips ? parseInt(newDriverData.completedTrips) : 0,
+      completedTrips: newDriverData.completedTrips
+        ? parseInt(newDriverData.completedTrips)
+        : 0,
       rating: newDriverData.rating ? parseFloat(newDriverData.rating) : 5.0,
       earnings: newDriverData.earnings ? parseFloat(newDriverData.earnings) : 0,
-      onTimePercentage: newDriverData.onTimePercentage ? parseInt(newDriverData.onTimePercentage) : 100,
-      fuelEfficiency: newDriverData.fuelEfficiency ? parseFloat(newDriverData.fuelEfficiency) : 8.0,
-      avatar: newDriverData.name ? newDriverData.name.split(' ').map((n: string) => n[0]).join('').toUpperCase().substring(0, 2) : "ND",
+      onTimePercentage: newDriverData.onTimePercentage
+        ? parseInt(newDriverData.onTimePercentage)
+        : 100,
+      fuelEfficiency: newDriverData.fuelEfficiency
+        ? parseFloat(newDriverData.fuelEfficiency)
+        : 8.0,
+      avatar: newDriverData.name
+        ? newDriverData.name
+            .split(" ")
+            .map((n: string) => n[0])
+            .join("")
+            .toUpperCase()
+            .substring(0, 2)
+        : "ND",
       vehicleNumber: newDriverData.vehicle || "VEH-000",
-      joinDate: new Date().toISOString().split('T')[0],
+      joinDate: new Date().toISOString().split("T")[0],
       lastActive: "Just now",
     };
 
@@ -192,23 +198,42 @@ export default function Drivers() {
 
   // Function to update driver
   const handleUpdateDriver = (updatedData: any) => {
-    setDrivers(drivers.map(driver =>
-      driver.id === updatedData.id
-        ? {
-            ...driver,
-            name: updatedData.name || driver.name,
-            phone: updatedData.phone || driver.phone,
-            email: updatedData.email || driver.email,
-            vehicleNumber: updatedData.vehicle || driver.vehicleNumber,
-            completedTrips: updatedData.completedTrips ? parseInt(updatedData.completedTrips) : driver.completedTrips,
-            rating: updatedData.rating ? parseFloat(updatedData.rating) : driver.rating,
-            earnings: updatedData.earnings ? parseFloat(updatedData.earnings) : driver.earnings,
-            onTimePercentage: updatedData.onTimePercentage ? parseInt(updatedData.onTimePercentage) : driver.onTimePercentage,
-            fuelEfficiency: updatedData.fuelEfficiency ? parseFloat(updatedData.fuelEfficiency) : driver.fuelEfficiency,
-            avatar: updatedData.name ? updatedData.name.split(' ').map((n: string) => n[0]).join('').toUpperCase().substring(0, 2) : driver.avatar,
-          }
-        : driver
-    ));
+    setDrivers(
+      drivers.map((driver) =>
+        driver.id === updatedData.id
+          ? {
+              ...driver,
+              name: updatedData.name || driver.name,
+              phone: updatedData.phone || driver.phone,
+              email: updatedData.email || driver.email,
+              vehicleNumber: updatedData.vehicle || driver.vehicleNumber,
+              completedTrips: updatedData.completedTrips
+                ? parseInt(updatedData.completedTrips)
+                : driver.completedTrips,
+              rating: updatedData.rating
+                ? parseFloat(updatedData.rating)
+                : driver.rating,
+              earnings: updatedData.earnings
+                ? parseFloat(updatedData.earnings)
+                : driver.earnings,
+              onTimePercentage: updatedData.onTimePercentage
+                ? parseInt(updatedData.onTimePercentage)
+                : driver.onTimePercentage,
+              fuelEfficiency: updatedData.fuelEfficiency
+                ? parseFloat(updatedData.fuelEfficiency)
+                : driver.fuelEfficiency,
+              avatar: updatedData.name
+                ? updatedData.name
+                    .split(" ")
+                    .map((n: string) => n[0])
+                    .join("")
+                    .toUpperCase()
+                    .substring(0, 2)
+                : driver.avatar,
+            }
+          : driver,
+      ),
+    );
     setIsEditDriverOpen(false);
     setDriverToEdit(null);
   };
@@ -218,8 +243,8 @@ export default function Drivers() {
     if (!autoUpdateEnabled) return;
 
     const interval = setInterval(() => {
-      setDrivers(prevDrivers =>
-        prevDrivers.map(driver => {
+      setDrivers((prevDrivers) =>
+        prevDrivers.map((driver) => {
           // Only update active drivers
           if (driver.status !== "active") return driver;
 
@@ -235,17 +260,21 @@ export default function Drivers() {
               completedTrips: driver.completedTrips + 1,
               earnings: driver.earnings + tripEarning,
               onTimePercentage: Math.round(
-                ((driver.onTimePercentage * driver.completedTrips) + (wasOnTime ? 100 : 0)) /
-                (driver.completedTrips + 1)
+                (driver.onTimePercentage * driver.completedTrips +
+                  (wasOnTime ? 100 : 0)) /
+                  (driver.completedTrips + 1),
               ),
               // Slightly adjust rating (very small changes)
-              rating: Math.min(5, Math.max(0, driver.rating + (Math.random() - 0.5) * 0.1)),
+              rating: Math.min(
+                5,
+                Math.max(0, driver.rating + (Math.random() - 0.5) * 0.1),
+              ),
               lastActive: "Just now",
             };
           }
 
           return driver;
-        })
+        }),
       );
     }, 10000); // Every 10 seconds
 
@@ -301,32 +330,19 @@ export default function Drivers() {
 
   const filteredDrivers = drivers.filter((driver) => {
     const matchesSearch =
-      driver.name
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
-      driver.id
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
+      driver.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      driver.id.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus =
       filterStatus === "all" || driver.status === filterStatus;
     return matchesSearch && matchesStatus;
   });
 
-  const activeDrivers = drivers.filter(
-    (d) => d.status === "active",
-  ).length;
+  const activeDrivers = drivers.filter((d) => d.status === "active").length;
   const avgRating = (
-    drivers.reduce((sum, d) => sum + d.rating, 0) /
-    drivers.length
+    drivers.reduce((sum, d) => sum + d.rating, 0) / drivers.length
   ).toFixed(1);
-  const totalEarnings = drivers.reduce(
-    (sum, d) => sum + d.earnings,
-    0,
-  );
-  const totalTrips = drivers.reduce(
-    (sum, d) => sum + d.completedTrips,
-    0,
-  );
+  const totalEarnings = drivers.reduce((sum, d) => sum + d.earnings, 0);
+  const totalTrips = drivers.reduce((sum, d) => sum + d.completedTrips, 0);
 
   return (
     <div className="space-y-6">
@@ -349,9 +365,11 @@ export default function Drivers() {
         <div className="flex flex-wrap gap-2">
           {liveDrivers.map((d) => {
             const statusStyles = {
-              available: "bg-emerald-50 border-emerald-200 dark:bg-emerald-900/20 dark:border-emerald-800/40",
+              available:
+                "bg-emerald-50 border-emerald-200 dark:bg-emerald-900/20 dark:border-emerald-800/40",
               busy: "bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800/40",
-              "off-duty": "bg-gray-50 border-gray-200 dark:bg-gray-800/50 dark:border-gray-700",
+              "off-duty":
+                "bg-gray-50 border-gray-200 dark:bg-gray-800/50 dark:border-gray-700",
             };
             const dotStyles = {
               available: "bg-emerald-500",
@@ -368,17 +386,31 @@ export default function Drivers() {
                 key={d.id}
                 className={`flex items-center gap-2 px-3 py-2 rounded-xl border text-xs transition-all ${statusStyles[d.status]}`}
               >
-                <div className={`w-6 h-6 rounded-lg ${d.avatarColor} flex items-center justify-center shadow-sm flex-shrink-0`}>
-                  <span className="text-[9px] font-black text-white">{d.initials}</span>
+                <div
+                  className={`w-6 h-6 rounded-lg ${d.avatarColor} flex items-center justify-center shadow-sm flex-shrink-0`}
+                >
+                  <span className="text-[9px] font-black text-white">
+                    {d.initials}
+                  </span>
                 </div>
                 <div>
-                  <p className="font-black text-gray-900 dark:text-white text-[11px]">{d.name}</p>
+                  <p className="font-black text-gray-900 dark:text-white text-[11px]">
+                    {d.name}
+                  </p>
                   <p className="text-[9px] text-gray-400">{d.vehicleType}</p>
                 </div>
                 <div className="flex items-center gap-1 ml-1">
-                  <div className={`w-1.5 h-1.5 rounded-full ${dotStyles[d.status]}`} />
-                  <span className={`text-[9px] font-bold capitalize ${textStyles[d.status]}`}>
-                    {d.status === "off-duty" ? "Off Duty" : d.status === "busy" ? "On Route" : "Available"}
+                  <div
+                    className={`w-1.5 h-1.5 rounded-full ${dotStyles[d.status]}`}
+                  />
+                  <span
+                    className={`text-[9px] font-bold capitalize ${textStyles[d.status]}`}
+                  >
+                    {d.status === "off-duty"
+                      ? "Off Duty"
+                      : d.status === "busy"
+                        ? "On Route"
+                        : "Available"}
                   </span>
                 </div>
                 {/* Toggle status quick-action */}
@@ -428,10 +460,20 @@ export default function Drivers() {
         <div className="flex gap-3">
           <motion.button
             onClick={() => {
-              const header = "ID,Name,Email,Phone,Status,Rating,Trips,Earnings\n";
+              const header =
+                "ID,Name,Email,Phone,Status,Rating,Trips,Earnings\n";
               const body = filteredDrivers
                 .map((d: any) =>
-                  [d.id, d.name, d.email ?? "", d.phone ?? "", d.status, d.rating, d.trips, d.earnings].join(",")
+                  [
+                    d.id,
+                    d.name,
+                    d.email ?? "",
+                    d.phone ?? "",
+                    d.status,
+                    d.rating,
+                    d.trips,
+                    d.earnings,
+                  ].join(","),
                 )
                 .join("\n");
               const blob = new Blob([header + body], { type: "text/csv" });
@@ -460,7 +502,9 @@ export default function Drivers() {
             }`}
             title="Simulate real-time driver activity updates"
           >
-            <Activity className={`w-4 h-4 ${autoUpdateEnabled ? "animate-pulse" : ""}`} />
+            <Activity
+              className={`w-4 h-4 ${autoUpdateEnabled ? "animate-pulse" : ""}`}
+            />
             Auto-Update {autoUpdateEnabled ? "ON" : "OFF"}
           </motion.button>
           <motion.button
@@ -526,27 +570,18 @@ export default function Drivers() {
               variants={itemVariants}
               whileHover={{
                 y: -5,
-                boxShadow:
-                  "0 10px 25px -5px rgba(0, 0, 0, 0.1)",
+                boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)",
               }}
               className="bg-white p-6 rounded-xl shadow-sm border border-gray-100"
             >
               <div className="flex items-center justify-between mb-4">
-                <div
-                  className={`p-3 rounded-lg ${colorMap[stat.color]}`}
-                >
+                <div className={`p-3 rounded-lg ${colorMap[stat.color]}`}>
                   <Icon className="w-6 h-6" />
                 </div>
               </div>
-              <p className="text-sm text-gray-600 mb-1">
-                {stat.label}
-              </p>
-              <p className="text-3xl font-bold text-gray-900">
-                {stat.value}
-              </p>
-              <p className="text-xs text-gray-500 mt-2">
-                {stat.subtitle}
-              </p>
+              <p className="text-sm text-gray-600 mb-1">{stat.label}</p>
+              <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
+              <p className="text-xs text-gray-500 mt-2">{stat.subtitle}</p>
             </motion.div>
           );
         })}
@@ -571,9 +606,7 @@ export default function Drivers() {
         </div>
         <select
           value={filterStatus}
-          onChange={(e) =>
-            setFilterStatus(e.target.value as any)
-          }
+          onChange={(e) => setFilterStatus(e.target.value as any)}
           className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
         >
           <option value="all">All Status</option>
@@ -595,9 +628,21 @@ export default function Drivers() {
           <motion.div
             key={driver.id}
             variants={itemVariants}
-            initial={index === 0 && driver.lastActive === "Just now" ? { scale: 0, opacity: 0 } : undefined}
-            animate={index === 0 && driver.lastActive === "Just now" ? { scale: 1, opacity: 1 } : undefined}
-            transition={index === 0 && driver.lastActive === "Just now" ? { type: "spring", duration: 0.6 } : undefined}
+            initial={
+              index === 0 && driver.lastActive === "Just now"
+                ? { scale: 0, opacity: 0 }
+                : undefined
+            }
+            animate={
+              index === 0 && driver.lastActive === "Just now"
+                ? { scale: 1, opacity: 1 }
+                : undefined
+            }
+            transition={
+              index === 0 && driver.lastActive === "Just now"
+                ? { type: "spring", duration: 0.6 }
+                : undefined
+            }
             whileHover={{
               y: -5,
               boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)",
@@ -628,9 +673,7 @@ export default function Drivers() {
                       </motion.span>
                     )}
                   </div>
-                  <p className="text-sm text-gray-500">
-                    {driver.id}
-                  </p>
+                  <p className="text-sm text-gray-500">{driver.id}</p>
                 </div>
               </div>
               <motion.button
@@ -813,9 +856,7 @@ export default function Drivers() {
                     {driver.avatar}
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900">
-                      {driver.name}
-                    </p>
+                    <p className="font-medium text-gray-900">{driver.name}</p>
                     <p className="text-sm text-gray-500">
                       {driver.completedTrips} trips completed
                     </p>
@@ -832,9 +873,7 @@ export default function Drivers() {
                     <p className="font-semibold text-gray-900">
                       ${driver.earnings.toLocaleString()}
                     </p>
-                    <p className="text-xs text-gray-500">
-                      earnings
-                    </p>
+                    <p className="text-xs text-gray-500">earnings</p>
                   </div>
                 </div>
               </motion.div>
@@ -872,7 +911,11 @@ export default function Drivers() {
           >
             <div className="flex items-center gap-4 mb-4 pb-4 border-b">
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-white text-2xl font-bold">
-                {driverToView.name?.split(" ").map((n) => n[0]).slice(0, 2).join("")}
+                {driverToView.name
+                  ?.split(" ")
+                  .map((n) => n[0])
+                  .slice(0, 2)
+                  .join("")}
               </div>
               <div>
                 <h2 className="text-xl font-bold">{driverToView.name}</h2>
@@ -884,11 +927,23 @@ export default function Drivers() {
               <DetailRow label="Phone" value={driverToView.phone} />
               <DetailRow label="Email" value={driverToView.email} />
               <DetailRow label="Vehicle" value={driverToView.vehicleNumber} />
-              <DetailRow label="Current Route" value={driverToView.currentRoute} />
+              <DetailRow
+                label="Current Route"
+                value={driverToView.currentRoute}
+              />
               <DetailRow label="Rating" value={`${driverToView.rating} ★`} />
-              <DetailRow label="Completed Trips" value={String(driverToView.completedTrips)} />
-              <DetailRow label="On-Time %" value={`${driverToView.onTimePercentage}%`} />
-              <DetailRow label="Earnings" value={`$${driverToView.earnings.toLocaleString()}`} />
+              <DetailRow
+                label="Completed Trips"
+                value={String(driverToView.completedTrips)}
+              />
+              <DetailRow
+                label="On-Time %"
+                value={`${driverToView.onTimePercentage}%`}
+              />
+              <DetailRow
+                label="Earnings"
+                value={`$${driverToView.earnings.toLocaleString()}`}
+              />
               <DetailRow label="Joined" value={driverToView.joinDate} />
             </div>
             <div className="mt-6 flex justify-end gap-2">

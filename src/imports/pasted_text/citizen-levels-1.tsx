@@ -12,7 +12,7 @@ import {
   Gift,
   Users,
 } from "lucide-react";
-import type { CitizenLevel } from "../../types/recyclehub";
+import type { CitizenLevel } from "../../types/EcoSnap";
 
 const levelsData: CitizenLevel[] = [
   {
@@ -60,7 +60,11 @@ const levelsData: CitizenLevel[] = [
     title: "Hero",
     minPoints: 10000,
     maxPoints: 19999,
-    benefits: ["20 points per kg", "Featured in leaderboard", "Monthly rewards"],
+    benefits: [
+      "20 points per kg",
+      "Featured in leaderboard",
+      "Monthly rewards",
+    ],
     color: "orange",
   },
   {
@@ -76,7 +80,11 @@ const levelsData: CitizenLevel[] = [
     title: "Master",
     minPoints: 50000,
     maxPoints: 99999,
-    benefits: ["30 points per kg", "Platinum membership", "Direct line support"],
+    benefits: [
+      "30 points per kg",
+      "Platinum membership",
+      "Direct line support",
+    ],
     color: "yellow",
   },
   {
@@ -92,7 +100,11 @@ const levelsData: CitizenLevel[] = [
     title: "Eco Guardian",
     minPoints: 250000,
     maxPoints: Infinity,
-    benefits: ["40 points per kg", "Lifetime recognition", "Partnership programs"],
+    benefits: [
+      "40 points per kg",
+      "Lifetime recognition",
+      "Partnership programs",
+    ],
     color: "emerald",
   },
 ];
@@ -183,7 +195,7 @@ export default function Levels() {
     totalLevels: levelsData.length,
     avgPointsRequired: Math.round(
       levelsData.reduce((sum, l) => sum + (l.minPoints + l.maxPoints) / 2, 0) /
-        levelsData.length
+        levelsData.length,
     ),
     topLevel: levelsData[levelsData.length - 1].title,
     activeCitizens: 1247,
@@ -193,7 +205,9 @@ export default function Levels() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Levels & Progression</h1>
+        <h1 className="text-2xl font-bold text-gray-900">
+          Levels & Progression
+        </h1>
         <p className="text-gray-600 mt-1">
           Citizen ranking system and rewards tiers
         </p>
@@ -333,9 +347,10 @@ export default function Levels() {
           <div>
             <h3 className="text-xl font-bold mb-2">How Leveling Works</h3>
             <p className="text-emerald-50 mb-4">
-              Citizens earn points by recycling bottles. As they accumulate points,
-              they automatically progress through levels, unlocking better rewards,
-              higher points multipliers, and exclusive benefits at each tier.
+              Citizens earn points by recycling bottles. As they accumulate
+              points, they automatically progress through levels, unlocking
+              better rewards, higher points multipliers, and exclusive benefits
+              at each tier.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="p-4 bg-white/10 backdrop-blur-sm rounded-lg">
@@ -344,7 +359,9 @@ export default function Levels() {
               </div>
               <div className="p-4 bg-white/10 backdrop-blur-sm rounded-lg">
                 <p className="text-sm text-emerald-100 mb-1">Level Up</p>
-                <p className="font-semibold">Automatically advance through levels</p>
+                <p className="font-semibold">
+                  Automatically advance through levels
+                </p>
               </div>
               <div className="p-4 bg-white/10 backdrop-blur-sm rounded-lg">
                 <p className="text-sm text-emerald-100 mb-1">Get Rewards</p>

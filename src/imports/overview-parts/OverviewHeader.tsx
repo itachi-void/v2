@@ -12,7 +12,13 @@ interface Props {
   driversCount: number;
 }
 
-function AnimatedCounter({ end, duration = 1.5 }: { end: number; duration?: number }) {
+function AnimatedCounter({
+  end,
+  duration = 1.5,
+}: {
+  end: number;
+  duration?: number;
+}) {
   // simple inline counter to keep header independent
   return <>{end.toLocaleString()}</>;
 }
@@ -40,7 +46,9 @@ export default function OverviewHeader({
           <TrendingUp className="size-5" />
         </div>
         <div>
-          <h1 className="text-sm font-black tracking-widest uppercase">CREATORA ECOVOID</h1>
+          <h1 className="text-sm font-black tracking-widest uppercase">
+            CREATORA EcoSnap
+          </h1>
           <p className="text-[9px] text-slate-400 dark:text-white/40 uppercase tracking-widest font-extrabold">
             Active System Console
           </p>
@@ -63,13 +71,19 @@ export default function OverviewHeader({
         <div className="flex items-center gap-2 border-r border-slate-200/40 dark:border-white/5 pr-6">
           <span>Avg Dispatch</span>
           <span className="text-lg font-black text-slate-900 dark:text-[#00E5FF] tracking-tight dark:drop-shadow-[0_0_6px_rgba(0,229,255,0.4)]">
-            14<span className="text-[9px] text-slate-400 dark:text-[#00E5FF]/50 ml-0.5">min</span>
+            14
+            <span className="text-[9px] text-slate-400 dark:text-[#00E5FF]/50 ml-0.5">
+              min
+            </span>
           </span>
         </div>
         <div className="flex items-center gap-2">
           <span>CO₂ Saved</span>
           <span className="text-lg font-black text-emerald-600 dark:text-emerald-400 tracking-tight">
-            2,340<span className="text-[9px] text-emerald-500/60 dark:text-emerald-500/50 ml-0.5">kg</span>
+            2,340
+            <span className="text-[9px] text-emerald-500/60 dark:text-emerald-500/50 ml-0.5">
+              kg
+            </span>
           </span>
         </div>
       </div>
@@ -77,10 +91,14 @@ export default function OverviewHeader({
       <div className="flex items-center gap-4">
         <button
           onClick={() => setDashboardStyle(isGlass ? "classic" : "glass")}
-          title={isGlass ? "Switch to Classic Edition" : "Switch to Glass Edition"}
+          title={
+            isGlass ? "Switch to Classic Edition" : "Switch to Glass Edition"
+          }
           className="inline-flex items-center gap-1.5 bg-slate-100/80 dark:bg-white/5 hover:bg-slate-200/80 dark:hover:bg-white/10 border border-black/5 dark:border-white/5 px-3 py-2.5 rounded-full shadow-inner transition-colors"
         >
-          <Sparkles className={`w-3.5 h-3.5 ${isGlass ? "text-cyan-600 dark:text-[#4ED0F5]" : "text-slate-500"}`} />
+          <Sparkles
+            className={`w-3.5 h-3.5 ${isGlass ? "text-cyan-600 dark:text-[#4ED0F5]" : "text-slate-500"}`}
+          />
           <span className="text-[9px] font-black uppercase tracking-widest text-slate-600 dark:text-white/70">
             {isGlass ? "Glass" : "Classic"}
           </span>
@@ -109,7 +127,9 @@ export default function OverviewHeader({
             }}
             transition={{ duration: 2, repeat: Infinity }}
           />
-          <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">LIVE FEED</span>
+          <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">
+            LIVE FEED
+          </span>
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-const NS = "ecovoid";
+const NS = "EcoSnap";
 const VERSION_SUFFIX = "v1";
 
 export type StorageKey = string;
@@ -56,5 +56,12 @@ export function clearNamespace(prefix = NS): number {
   return keys.length;
 }
 
-export const storage = { nsKey, safeGet, safeSet, safeRemove, listNamespace, clearNamespace };
+export const storage = {
+  nsKey,
+  safeGet,
+  safeSet,
+  safeRemove,
+  listNamespace,
+  clearNamespace,
+};
 export default storage;

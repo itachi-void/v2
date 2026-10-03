@@ -14,7 +14,7 @@ export default function LoginModal({ isOpen, onClose }: { isOpen: boolean; onClo
   const [mode, setMode] = useState<Mode>("login");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("demo1234");
+  const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -74,7 +74,7 @@ export default function LoginModal({ isOpen, onClose }: { isOpen: boolean; onClo
                 {mode === "login" ? "Welcome Back" : "Create Account"}
               </h3>
               <p className="text-gray-600 text-sm mt-1">
-                {mode === "login" ? "Sign in to your EcoVision account" : "Join the recycling movement"}
+                {mode === "login" ? "Sign in to your EcoSnap account" : "Join the recycling movement"}
               </p>
             </div>
 
@@ -87,7 +87,7 @@ export default function LoginModal({ isOpen, onClose }: { isOpen: boolean; onClo
               )}
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <input className={inputClass} type="email" placeholder="Email (try admin@ / citizen@)" value={email} onChange={(e) => setEmail(e.target.value)} />
+                <input className={inputClass} type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
               </div>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />

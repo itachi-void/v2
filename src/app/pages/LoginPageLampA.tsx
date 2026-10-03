@@ -6,7 +6,7 @@ import LampLoginForm from "@/app/components/LampLoginForm";
 
 /**
  * Login — Version A: Emerald Identity
- * Matches the existing EcoVoid brand. Emerald glow, dark teal-tinted void,
+ * Matches the existing EcoSnap brand. Emerald glow, dark teal-tinted void,
  * subtle volumetric lighting, premium SaaS feel.
  */
 export default function LoginPageLampA() {
@@ -18,7 +18,7 @@ export default function LoginPageLampA() {
   return (
     <div style={{ position: "fixed", inset: 0 }}>
       <LampScene
-        warm="134, 239, 172"  /* emerald-300 */
+        warm="134, 239, 172" /* emerald-300 */
         beamIntensity={0.9}
         beamWidth={0.55}
         ambientGlow={0}

@@ -859,7 +859,7 @@ export default function LandingPage() {
                 <Recycle className="w-8 h-8 text-emerald-600" />
               </motion.div>
               <span className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-                RecycleHub
+                EcoSnap
               </span>
             </motion.div>
 
@@ -1356,7 +1356,7 @@ export default function LandingPage() {
                 <motion.div {...spinForever(20)}>
                   <Recycle className="w-6 h-6" />
                 </motion.div>
-                <span className="text-xl font-bold">RecycleHub</span>
+                <span className="text-xl font-bold">EcoSnap</span>
               </div>
               <p className="text-gray-400 text-sm">
                 Smart bottle recycling system with AI verification and instant
@@ -1407,7 +1407,7 @@ export default function LandingPage() {
           {/* حقوق النشر + لينك الباورد */}
           <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-sm text-gray-400">
-              © 2025 RecycleHub. All rights reserved.
+              © 2025 EcoSnap. All rights reserved.
             </p>
             <motion.a
               href="https://readdy.link"

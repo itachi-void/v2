@@ -67,30 +67,26 @@ export default function FloatingParticles() {
     [],
   );
 
-  // طبقة المقدّمة الناعمة
+  // طبقة المقدّمة الناعمة الهادئة
   const fgOptions = useMemo(
     () => ({
-      fullScreen: { enable: true, zIndex: 2 },
+      fullScreen: { enable: true, zIndex: 0 },
       background: { color: { value: "transparent" } },
       interactivity: {
-        events: { onHover: { enable: true, mode: ["repulse", "slow"] } },
-        modes: {
-          repulse: { distance: 180, duration: 1.2, factor: 8, speed: 0.5 },
-          slow: { radius: 220, factor: 0.4 },
-        },
+        events: { onHover: { enable: false } },
       },
       particles: {
-        number: { value: 70 },
-        color: { value: ["#22c55e", "#f59e0b", "#ef4444"] },
-        size: { value: { min: 3, max: 10 } },
-        opacity: { value: { min: 0.7, max: 1 } },
+        number: { value: 30 },
+        color: { value: ["#10b981", "#14b8a6", "#06b6d4"] },
+        size: { value: { min: 2, max: 4 } },
+        opacity: { value: { min: 0.2, max: 0.4 } },
         move: {
           enable: true,
-          speed: 1.3,
+          speed: 0.5,
           random: true,
-          outModes: { default: "bounce" as const },
+          outModes: { default: "out" as const },
         },
-        shape: { type: ["circle", "square", "star", "triangle", "polygon"] },
+        shape: { type: "circle" },
       },
       detectRetina: true,
     }),

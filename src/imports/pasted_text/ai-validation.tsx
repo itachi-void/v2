@@ -15,7 +15,10 @@ import {
   X,
   Zap,
 } from "lucide-react";
-import type { AIValidationSubmission, AIValidationStatus } from "../../types/recyclehub";
+import type {
+  AIValidationSubmission,
+  AIValidationStatus,
+} from "../../types/EcoSnap";
 
 const mockSubmissions: AIValidationSubmission[] = [
   {
@@ -23,7 +26,8 @@ const mockSubmissions: AIValidationSubmission[] = [
     citizenId: "CIT-12345",
     citizenName: "Ahmed Hassan",
     submittedAt: new Date("2026-05-22T10:30:00"),
-    imageUrl: "https://images.unsplash.com/photo-1611284446314-60a58ac0deb9?w=400",
+    imageUrl:
+      "https://images.unsplash.com/photo-1611284446314-60a58ac0deb9?w=400",
     detectedType: "PET",
     detectedQuantity: 5,
     detectedWeightKg: 0.5,
@@ -36,7 +40,8 @@ const mockSubmissions: AIValidationSubmission[] = [
     citizenId: "CIT-12346",
     citizenName: "Fatma Mohamed",
     submittedAt: new Date("2026-05-22T09:15:00"),
-    imageUrl: "https://images.unsplash.com/photo-1621451537084-482c73073a0f?w=400",
+    imageUrl:
+      "https://images.unsplash.com/photo-1621451537084-482c73073a0f?w=400",
     detectedType: "HDPE",
     detectedQuantity: 3,
     detectedWeightKg: 0.3,
@@ -49,7 +54,8 @@ const mockSubmissions: AIValidationSubmission[] = [
     citizenId: "CIT-12347",
     citizenName: "Omar Ali",
     submittedAt: new Date("2026-05-22T08:00:00"),
-    imageUrl: "https://images.unsplash.com/photo-1604187351574-c75ca79f5807?w=400",
+    imageUrl:
+      "https://images.unsplash.com/photo-1604187351574-c75ca79f5807?w=400",
     detectedType: "PET",
     detectedQuantity: 8,
     detectedWeightKg: 0.8,
@@ -63,7 +69,8 @@ const mockSubmissions: AIValidationSubmission[] = [
     citizenId: "CIT-12348",
     citizenName: "Sara Mahmoud",
     submittedAt: new Date("2026-05-21T16:45:00"),
-    imageUrl: "https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?w=400",
+    imageUrl:
+      "https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?w=400",
     detectedType: "PP",
     detectedQuantity: 4,
     detectedWeightKg: 0.4,
@@ -78,7 +85,8 @@ const mockSubmissions: AIValidationSubmission[] = [
     citizenId: "CIT-12349",
     citizenName: "Karim Youssef",
     submittedAt: new Date("2026-05-21T14:20:00"),
-    imageUrl: "https://images.unsplash.com/photo-1572098661174-87690fb6c527?w=400",
+    imageUrl:
+      "https://images.unsplash.com/photo-1572098661174-87690fb6c527?w=400",
     detectedType: "PET",
     detectedQuantity: 2,
     detectedWeightKg: 0.2,
@@ -92,12 +100,14 @@ const mockSubmissions: AIValidationSubmission[] = [
 ];
 
 export default function AIValidation() {
-  const [submissions, setSubmissions] = useState<AIValidationSubmission[]>(mockSubmissions);
+  const [submissions, setSubmissions] =
+    useState<AIValidationSubmission[]>(mockSubmissions);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterStatus, setFilterStatus] = useState<"all" | AIValidationStatus>("all");
-  const [selectedSubmission, setSelectedSubmission] = useState<AIValidationSubmission | null>(
-    null
+  const [filterStatus, setFilterStatus] = useState<"all" | AIValidationStatus>(
+    "all",
   );
+  const [selectedSubmission, setSelectedSubmission] =
+    useState<AIValidationSubmission | null>(null);
   const [showDetailsDialog, setShowDetailsDialog] = useState(false);
 
   const handleApprove = (submissionId: string) => {
@@ -110,8 +120,8 @@ export default function AIValidation() {
               reviewedBy: "Admin User",
               reviewedAt: new Date(),
             }
-          : sub
-      )
+          : sub,
+      ),
     );
     setShowDetailsDialog(false);
   };
@@ -128,8 +138,8 @@ export default function AIValidation() {
               rejectionReason: reason,
               pointsToAward: 0,
             }
-          : sub
-      )
+          : sub,
+      ),
     );
     setShowDetailsDialog(false);
   };
@@ -186,14 +196,18 @@ export default function AIValidation() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">AI Validation Review</h1>
+          <h1 className="text-2xl font-bold text-gray-900">
+            AI Validation Review
+          </h1>
           <p className="text-gray-600 mt-1">
             Review and validate AI-detected recycling submissions
           </p>
         </div>
         <div className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-100 to-blue-100 rounded-xl">
           <Zap className="w-5 h-5 text-purple-600" />
-          <span className="font-semibold text-gray-900">AI-Powered Detection</span>
+          <span className="font-semibold text-gray-900">
+            AI-Powered Detection
+          </span>
         </div>
       </div>
 
@@ -292,7 +306,7 @@ export default function AIValidation() {
               <div className="absolute top-3 right-3">
                 <span
                   className={`px-3 py-1 text-xs rounded-full font-medium inline-flex items-center gap-1 ${getStatusColor(
-                    submission.status
+                    submission.status,
                   )}`}
                 >
                   {getStatusIcon(submission.status)}
@@ -312,7 +326,9 @@ export default function AIValidation() {
               <div className="flex items-center justify-between mb-3">
                 <div>
                   <p className="font-semibold text-gray-900">{submission.id}</p>
-                  <p className="text-sm text-gray-600">{submission.citizenName}</p>
+                  <p className="text-sm text-gray-600">
+                    {submission.citizenName}
+                  </p>
                 </div>
                 <button
                   onClick={() => {
@@ -349,7 +365,7 @@ export default function AIValidation() {
                   <span className="text-gray-600">AI Confidence:</span>
                   <span
                     className={`font-semibold ${getConfidenceColor(
-                      submission.confidenceScore
+                      submission.confidenceScore,
                     )}`}
                   >
                     {submission.confidenceScore}%
@@ -390,7 +406,10 @@ export default function AIValidation() {
       {/* Details Dialog */}
       {showDetailsDialog && selectedSubmission && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/50">
-          <div onClick={() => setShowDetailsDialog(false)} className="absolute inset-0" />
+          <div
+            onClick={() => setShowDetailsDialog(false)}
+            className="absolute inset-0"
+          />
           <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
             {/* Dialog Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
@@ -402,7 +421,9 @@ export default function AIValidation() {
                   <h2 className="text-xl font-bold text-gray-900">
                     Validation Details
                   </h2>
-                  <p className="text-sm text-gray-600">{selectedSubmission.id}</p>
+                  <p className="text-sm text-gray-600">
+                    {selectedSubmission.id}
+                  </p>
                 </div>
               </div>
               <button
@@ -460,7 +481,7 @@ export default function AIValidation() {
                   <p className="text-sm text-gray-600">AI Confidence</p>
                   <p
                     className={`font-semibold ${getConfidenceColor(
-                      selectedSubmission.confidenceScore
+                      selectedSubmission.confidenceScore,
                     )}`}
                   >
                     {selectedSubmission.confidenceScore}%
@@ -476,7 +497,7 @@ export default function AIValidation() {
                   <p className="text-sm text-gray-600">Status</p>
                   <span
                     className={`inline-flex items-center gap-1 px-3 py-1 text-xs rounded-full font-medium ${getStatusColor(
-                      selectedSubmission.status
+                      selectedSubmission.status,
                     )}`}
                   >
                     {getStatusIcon(selectedSubmission.status)}
@@ -502,29 +523,34 @@ export default function AIValidation() {
               </div>
 
               {/* Fraud Flags */}
-              {selectedSubmission.fraudFlags && selectedSubmission.fraudFlags.length > 0 && (
-                <div className="p-4 bg-red-50 border border-red-200 rounded-xl">
-                  <div className="flex items-start gap-3">
-                    <ShieldAlert className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <p className="font-semibold text-red-900 mb-2">Fraud Alerts</p>
-                      <ul className="space-y-1">
-                        {selectedSubmission.fraudFlags.map((flag, idx) => (
-                          <li key={idx} className="text-sm text-red-700">
-                            • {flag}
-                          </li>
-                        ))}
-                      </ul>
+              {selectedSubmission.fraudFlags &&
+                selectedSubmission.fraudFlags.length > 0 && (
+                  <div className="p-4 bg-red-50 border border-red-200 rounded-xl">
+                    <div className="flex items-start gap-3">
+                      <ShieldAlert className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <p className="font-semibold text-red-900 mb-2">
+                          Fraud Alerts
+                        </p>
+                        <ul className="space-y-1">
+                          {selectedSubmission.fraudFlags.map((flag, idx) => (
+                            <li key={idx} className="text-sm text-red-700">
+                              • {flag}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
+                )}
 
               {/* Rejection Reason */}
               {selectedSubmission.rejectionReason && (
                 <div className="p-4 bg-gray-50 border border-gray-200 rounded-xl">
                   <p className="text-sm text-gray-600 mb-1">Rejection Reason</p>
-                  <p className="text-gray-900">{selectedSubmission.rejectionReason}</p>
+                  <p className="text-gray-900">
+                    {selectedSubmission.rejectionReason}
+                  </p>
                 </div>
               )}
             </div>

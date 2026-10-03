@@ -1,4 +1,12 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 export type NotificationSeverity = "info" | "success" | "warning" | "critical";
 
@@ -19,12 +27,17 @@ interface NotificationContextValue {
   markAllRead: () => void;
   markRead: (id: string) => void;
   dismiss: (id: string) => void;
-  addNotification: (n: Omit<Notification, "id" | "timestamp" | "read"> & Partial<Pick<Notification, "timestamp">>) => void;
+  addNotification: (
+    n: Omit<Notification, "id" | "timestamp" | "read"> &
+      Partial<Pick<Notification, "timestamp">>,
+  ) => void;
 }
 
-const NotificationContext = createContext<NotificationContextValue | null>(null);
+const NotificationContext = createContext<NotificationContextValue | null>(
+  null,
+);
 
-const STORAGE_KEY = "ecovoid.notifications.v1";
+const STORAGE_KEY = "EcoSnap.notifications.v1";
 
 const minutesAgo = (m: number) => Date.now() - m * 60_000;
 
@@ -102,14 +115,48 @@ const seed: Notification[] = [
 ];
 
 const randomPool: Omit<Notification, "id" | "timestamp" | "read">[] = [
-  { title: "New pickup request", body: "Citizen scheduled a glass pickup in West District.", severity: "info", icon: "Package", link: "/pickups" },
-  { title: "Route delay detected", body: "Route R-09 is 8 min behind schedule.", severity: "warning", icon: "Route", link: "/routes" },
-  { title: "Sensor offline", body: "Bin sensor B-217 has stopped reporting.", severity: "warning", icon: "WifiOff", link: "/alerts" },
-  { title: "Recycling milestone", body: "Daily target 90% achieved.", severity: "success", icon: "Recycle", link: "/sustainability" },
-  { title: "Support ticket opened", body: "Driver reported broken compactor.", severity: "info", icon: "LifeBuoy", link: "/support" },
+  {
+    title: "New pickup request",
+    body: "Citizen scheduled a glass pickup in West District.",
+    severity: "info",
+    icon: "Package",
+    link: "/pickups",
+  },
+  {
+    title: "Route delay detected",
+    body: "Route R-09 is 8 min behind schedule.",
+    severity: "warning",
+    icon: "Route",
+    link: "/routes",
+  },
+  {
+    title: "Sensor offline",
+    body: "Bin sensor B-217 has stopped reporting.",
+    severity: "warning",
+    icon: "WifiOff",
+    link: "/alerts",
+  },
+  {
+    title: "Recycling milestone",
+    body: "Daily target 90% achieved.",
+    severity: "success",
+    icon: "Recycle",
+    link: "/sustainability",
+  },
+  {
+    title: "Support ticket opened",
+    body: "Driver reported broken compactor.",
+    severity: "info",
+    icon: "LifeBuoy",
+    link: "/support",
+  },
 ];
 
-export function NotificationProvider({ children }: { children: React.ReactNode }) {
+export function NotificationProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [notifications, setNotifications] = useState<Notification[]>(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -126,16 +173,20 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     } catch {}
   }, [notifications]);
 
-  const addNotification = useCallback<NotificationContextValue["addNotification"]>((n) => {
-    setNotifications((prev) => [
-      {
-        id: `n${++idRef.current}`,
-        timestamp: n.timestamp ?? Date.now(),
-        read: false,
-        ...n,
-      },
-      ...prev,
-    ].slice(0, 50));
+  const addNotification = useCallback<
+    NotificationContextValue["addNotification"]
+  >((n) => {
+    setNotifications((prev) =>
+      [
+        {
+          id: `n${++idRef.current}`,
+          timestamp: n.timestamp ?? Date.now(),
+          read: false,
+          ...n,
+        },
+        ...prev,
+      ].slice(0, 50),
+    );
   }, []);
 
   const markAllRead = useCallback(() => {
@@ -143,7 +194,9 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
   }, []);
 
   const markRead = useCallback((id: string) => {
-    setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, read: true } : n)),
+    );
   }, []);
 
   const dismiss = useCallback((id: string) => {
@@ -159,7 +212,10 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     return () => clearInterval(interval);
   }, [addNotification]);
 
-  const unreadCount = useMemo(() => notifications.filter((n) => !n.read).length, [notifications]);
+  const unreadCount = useMemo(
+    () => notifications.filter((n) => !n.read).length,
+    [notifications],
+  );
 
   const value: NotificationContextValue = {
     notifications,
@@ -170,11 +226,18 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     addNotification,
   };
 
-  return <NotificationContext.Provider value={value}>{children}</NotificationContext.Provider>;
+  return (
+    <NotificationContext.Provider value={value}>
+      {children}
+    </NotificationContext.Provider>
+  );
 }
 
 export function useNotifications() {
   const ctx = useContext(NotificationContext);
-  if (!ctx) throw new Error("useNotifications must be used within NotificationProvider");
+  if (!ctx)
+    throw new Error(
+      "useNotifications must be used within NotificationProvider",
+    );
   return ctx;
 }

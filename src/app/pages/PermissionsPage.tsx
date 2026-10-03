@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { motion } from "motion/react";
-import { ShieldCheck, Users, Layers, ClipboardCheck, Edit3, UserCircle2, X } from "lucide-react";
+import {
+  ShieldCheck,
+  Users,
+  Layers,
+  ClipboardCheck,
+  Edit3,
+  UserCircle2,
+  X,
+} from "lucide-react";
 import { useRoleContext } from "@/contexts/RoleContext";
 import { toast } from "sonner";
 import { GlassCard } from "@/app/components/GlassCard";
@@ -18,25 +26,77 @@ const TABS: { id: TabId; label: string; Icon: typeof Users }[] = [
   { id: "reviews", label: "Access Reviews", Icon: ClipboardCheck },
 ];
 
-interface Role { name: string; desc: string; users: number; perms: number; accent: string }
+interface Role {
+  name: string;
+  desc: string;
+  users: number;
+  perms: number;
+  accent: string;
+}
 const initialRoles: Role[] = [
-  { name: "Admin", desc: "Full system access", users: 4, perms: 28, accent: "violet" },
-  { name: "Manager", desc: "Zone-scoped operations", users: 12, perms: 18, accent: "emerald" },
-  { name: "Driver", desc: "Mobile field access", users: 64, perms: 6, accent: "sky" },
-  { name: "Citizen", desc: "Self-service portal", users: 4280, perms: 3, accent: "amber" },
+  {
+    name: "Admin",
+    desc: "Full system access",
+    users: 4,
+    perms: 28,
+    accent: "violet",
+  },
+  {
+    name: "Manager",
+    desc: "Zone-scoped operations",
+    users: 12,
+    perms: 18,
+    accent: "emerald",
+  },
+  {
+    name: "Driver",
+    desc: "Mobile field access",
+    users: 64,
+    perms: 6,
+    accent: "sky",
+  },
+  {
+    name: "Citizen",
+    desc: "Self-service portal",
+    users: 4280,
+    perms: 3,
+    accent: "amber",
+  },
 ];
 
-const RESOURCES = ["Pickups", "Drivers", "Zones", "Reports", "Settings", "Audit"];
+const RESOURCES = [
+  "Pickups",
+  "Drivers",
+  "Zones",
+  "Reports",
+  "Settings",
+  "Audit",
+];
 const LEVELS: Level[] = ["None", "Read", "Write", "Admin"];
 
 type Matrix = Record<string, Record<string, Level>>;
 const initialMatrix: Matrix = {
-  Pickups:  { Admin: "Admin", Manager: "Write", Driver: "Read",  Citizen: "Write" },
-  Drivers:  { Admin: "Admin", Manager: "Write", Driver: "Read",  Citizen: "None"  },
-  Zones:    { Admin: "Admin", Manager: "Write", Driver: "Read",  Citizen: "Read"  },
-  Reports:  { Admin: "Admin", Manager: "Read",  Driver: "None",  Citizen: "None"  },
-  Settings: { Admin: "Admin", Manager: "None",  Driver: "None",  Citizen: "None"  },
-  Audit:    { Admin: "Read",  Manager: "None",  Driver: "None",  Citizen: "None"  },
+  Pickups: {
+    Admin: "Admin",
+    Manager: "Write",
+    Driver: "Read",
+    Citizen: "Write",
+  },
+  Drivers: {
+    Admin: "Admin",
+    Manager: "Write",
+    Driver: "Read",
+    Citizen: "None",
+  },
+  Zones: { Admin: "Admin", Manager: "Write", Driver: "Read", Citizen: "Read" },
+  Reports: { Admin: "Admin", Manager: "Read", Driver: "None", Citizen: "None" },
+  Settings: {
+    Admin: "Admin",
+    Manager: "None",
+    Driver: "None",
+    Citizen: "None",
+  },
+  Audit: { Admin: "Read", Manager: "None", Driver: "None", Citizen: "None" },
 };
 
 const pillAccent: Record<Level, string> = {
@@ -46,34 +106,141 @@ const pillAccent: Record<Level, string> = {
   None: "bg-slate-500/10 text-slate-500 dark:text-slate-400",
 };
 
-interface UserRow { name: string; email: string; role: string; zones: string; lastLogin: string; status: string }
+interface UserRow {
+  name: string;
+  email: string;
+  role: string;
+  zones: string;
+  lastLogin: string;
+  status: string;
+}
 const initialUsers: UserRow[] = [
-  { name: "Ahmed Hassan", email: "ahmed@ecovoid.io", role: "Admin", zones: "All", lastLogin: "2 min ago", status: "Active" },
-  { name: "Sara Mohamed", email: "sara@ecovoid.io", role: "Manager", zones: "Downtown, Riverside", lastLogin: "1h ago", status: "Active" },
-  { name: "Mike Tyson", email: "mike@ecovoid.io", role: "Driver", zones: "Harbor", lastLogin: "5h ago", status: "Active" },
-  { name: "Omar Khaled", email: "omar@ecovoid.io", role: "Admin", zones: "All", lastLogin: "1d ago", status: "Active" },
-  { name: "Maya K.", email: "maya@example.com", role: "Citizen", zones: "Old City", lastLogin: "3d ago", status: "Inactive" },
+  {
+    name: "Ahmed Hassan",
+    email: "ahmed@EcoSnap.io",
+    role: "Admin",
+    zones: "All",
+    lastLogin: "2 min ago",
+    status: "Active",
+  },
+  {
+    name: "Sara Mohamed",
+    email: "sara@EcoSnap.io",
+    role: "Manager",
+    zones: "Downtown, Riverside",
+    lastLogin: "1h ago",
+    status: "Active",
+  },
+  {
+    name: "Mike Tyson",
+    email: "mike@EcoSnap.io",
+    role: "Driver",
+    zones: "Harbor",
+    lastLogin: "5h ago",
+    status: "Active",
+  },
+  {
+    name: "Omar Khaled",
+    email: "omar@EcoSnap.io",
+    role: "Admin",
+    zones: "All",
+    lastLogin: "1d ago",
+    status: "Active",
+  },
+  {
+    name: "Maya K.",
+    email: "maya@example.com",
+    role: "Citizen",
+    zones: "Old City",
+    lastLogin: "3d ago",
+    status: "Inactive",
+  },
 ];
 
-const ALL_ZONES = ["Downtown", "Riverside", "Harbor", "Old City", "North", "East", "South", "Central"];
+const ALL_ZONES = [
+  "Downtown",
+  "Riverside",
+  "Harbor",
+  "Old City",
+  "North",
+  "East",
+  "South",
+  "Central",
+];
 
-interface Scope { label: string; description: string; inheritedFrom: string; allowedRoles: string[]; count: number }
+interface Scope {
+  label: string;
+  description: string;
+  inheritedFrom: string;
+  allowedRoles: string[];
+  count: number;
+}
 const initialScopes: Scope[] = [
-  { label: "Zone scope: Downtown", description: "Operational scope for Downtown district", inheritedFrom: "Manager role", allowedRoles: ["Admin", "Manager"], count: 4 },
-  { label: "Zone scope: Riverside", description: "Operational scope for Riverside district", inheritedFrom: "Manager role", allowedRoles: ["Admin", "Manager"], count: 3 },
-  { label: "Zone scope: Harbor", description: "Field scope for Harbor district", inheritedFrom: "Driver role", allowedRoles: ["Admin", "Driver"], count: 8 },
-  { label: "Tenant scope: EcoVoid HQ", description: "Global tenant scope", inheritedFrom: "Admin role", allowedRoles: ["Admin"], count: 16 },
+  {
+    label: "Zone scope: Downtown",
+    description: "Operational scope for Downtown district",
+    inheritedFrom: "Manager role",
+    allowedRoles: ["Admin", "Manager"],
+    count: 4,
+  },
+  {
+    label: "Zone scope: Riverside",
+    description: "Operational scope for Riverside district",
+    inheritedFrom: "Manager role",
+    allowedRoles: ["Admin", "Manager"],
+    count: 3,
+  },
+  {
+    label: "Zone scope: Harbor",
+    description: "Field scope for Harbor district",
+    inheritedFrom: "Driver role",
+    allowedRoles: ["Admin", "Driver"],
+    count: 8,
+  },
+  {
+    label: "Tenant scope: EcoSnap HQ",
+    description: "Global tenant scope",
+    inheritedFrom: "Admin role",
+    allowedRoles: ["Admin"],
+    count: 16,
+  },
 ];
 
-interface Review { quarter: string; reviewer: string; completed: number; status: string }
+interface Review {
+  quarter: string;
+  reviewer: string;
+  completed: number;
+  status: string;
+}
 const initialReviews: Review[] = [
-  { quarter: "Q1 2026", reviewer: "Compliance Team", completed: 100, status: "Complete" },
-  { quarter: "Q2 2026", reviewer: "Compliance Team", completed: 67, status: "In progress" },
-  { quarter: "Q3 2026", reviewer: "Compliance Team", completed: 0, status: "Scheduled" },
-  { quarter: "Q4 2026", reviewer: "Compliance Team", completed: 0, status: "Scheduled" },
+  {
+    quarter: "Q1 2026",
+    reviewer: "Compliance Team",
+    completed: 100,
+    status: "Complete",
+  },
+  {
+    quarter: "Q2 2026",
+    reviewer: "Compliance Team",
+    completed: 67,
+    status: "In progress",
+  },
+  {
+    quarter: "Q3 2026",
+    reviewer: "Compliance Team",
+    completed: 0,
+    status: "Scheduled",
+  },
+  {
+    quarter: "Q4 2026",
+    reviewer: "Compliance Team",
+    completed: 0,
+    status: "Scheduled",
+  },
 ];
 
-const inputCls = "w-full h-10 px-4 rounded-full bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-400/50";
+const inputCls =
+  "w-full h-10 px-4 rounded-full bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-400/50";
 
 export default function PermissionsPage() {
   const { currentRole } = useRoleContext();
@@ -81,37 +248,85 @@ export default function PermissionsPage() {
   const [tab, setTab] = useState<TabId>("roles");
   const isAdmin = currentRole === "admin";
 
-  const [roles, setRoles] = useLocalStorage<Role[]>("ecovoid.permissions.roles.v1", initialRoles);
-  const [matrix, setMatrix] = useLocalStorage<Matrix>("ecovoid.permissions.v1", initialMatrix);
-  const [users, setUsers] = useLocalStorage<UserRow[]>("ecovoid.permissions.users.v1", initialUsers);
-  const [scopes, setScopes] = useLocalStorage<Scope[]>("ecovoid.permissions.scopes.v1", initialScopes);
-  const [reviews, setReviews] = useLocalStorage<Review[]>("ecovoid.permissions.reviews.v1", initialReviews);
+  const [roles, setRoles] = useLocalStorage<Role[]>(
+    "EcoSnap.permissions.roles.v1",
+    initialRoles,
+  );
+  const [matrix, setMatrix] = useLocalStorage<Matrix>(
+    "EcoSnap.permissions.v1",
+    initialMatrix,
+  );
+  const [users, setUsers] = useLocalStorage<UserRow[]>(
+    "EcoSnap.permissions.users.v1",
+    initialUsers,
+  );
+  const [scopes, setScopes] = useLocalStorage<Scope[]>(
+    "EcoSnap.permissions.scopes.v1",
+    initialScopes,
+  );
+  const [reviews, setReviews] = useLocalStorage<Review[]>(
+    "EcoSnap.permissions.reviews.v1",
+    initialReviews,
+  );
 
   const [editingRole, setEditingRole] = useState<Role | null>(null);
-  const [roleForm, setRoleForm] = useState<{ name: string; desc: string; levels: Record<string, Level> }>({ name: "", desc: "", levels: {} });
+  const [roleForm, setRoleForm] = useState<{
+    name: string;
+    desc: string;
+    levels: Record<string, Level>;
+  }>({ name: "", desc: "", levels: {} });
 
   const [editingUser, setEditingUser] = useState<UserRow | null>(null);
-  const [userForm, setUserForm] = useState<UserRow & { zonesArr: string[] }>({ name: "", email: "", role: "Citizen", zones: "", lastLogin: "", status: "Active", zonesArr: [] });
+  const [userForm, setUserForm] = useState<UserRow & { zonesArr: string[] }>({
+    name: "",
+    email: "",
+    role: "Citizen",
+    zones: "",
+    lastLogin: "",
+    status: "Active",
+    zonesArr: [],
+  });
 
   const [editingScope, setEditingScope] = useState<Scope | null>(null);
-  const [scopeForm, setScopeForm] = useState<Scope>({ label: "", description: "", inheritedFrom: "", allowedRoles: [], count: 0 });
+  const [scopeForm, setScopeForm] = useState<Scope>({
+    label: "",
+    description: "",
+    inheritedFrom: "",
+    allowedRoles: [],
+    count: 0,
+  });
 
   const openRoleEdit = (r: Role) => {
     const levels: Record<string, Level> = {};
-    RESOURCES.forEach((res) => { levels[res] = matrix[res]?.[r.name] || "None"; });
+    RESOURCES.forEach((res) => {
+      levels[res] = matrix[res]?.[r.name] || "None";
+    });
     setRoleForm({ name: r.name, desc: r.desc, levels });
     setEditingRole(r);
   };
 
   const saveRole = () => {
     if (!editingRole) return;
-    setRoles(roles.map((r) => r.name === editingRole.name ? { ...r, desc: roleForm.desc } : r));
+    setRoles(
+      roles.map((r) =>
+        r.name === editingRole.name ? { ...r, desc: roleForm.desc } : r,
+      ),
+    );
     const nextMatrix: Matrix = { ...matrix };
     RESOURCES.forEach((res) => {
-      nextMatrix[res] = { ...nextMatrix[res], [editingRole.name]: roleForm.levels[res] };
+      nextMatrix[res] = {
+        ...nextMatrix[res],
+        [editingRole.name]: roleForm.levels[res],
+      };
     });
     setMatrix(nextMatrix);
-    addNotification({ title: "Role updated", body: `${editingRole.name} permissions modified`, severity: "info", icon: "ShieldCheck", link: "/permissions" });
+    addNotification({
+      title: "Role updated",
+      body: `${editingRole.name} permissions modified`,
+      severity: "info",
+      icon: "ShieldCheck",
+      link: "/permissions",
+    });
     toast.success(`${editingRole.name} updated`);
     setEditingRole(null);
   };
@@ -121,51 +336,123 @@ export default function PermissionsPage() {
     const cur = matrix[resource]?.[roleName] || "None";
     const idx = LEVELS.indexOf(cur);
     const next = LEVELS[(idx + 1) % LEVELS.length];
-    setMatrix({ ...matrix, [resource]: { ...matrix[resource], [roleName]: next } });
-    addNotification({ title: "Permission changed", body: `${resource} · ${roleName}: ${cur} → ${next}`, severity: "info", icon: "ShieldCheck", link: "/permissions" });
+    setMatrix({
+      ...matrix,
+      [resource]: { ...matrix[resource], [roleName]: next },
+    });
+    addNotification({
+      title: "Permission changed",
+      body: `${resource} · ${roleName}: ${cur} → ${next}`,
+      severity: "info",
+      icon: "ShieldCheck",
+      link: "/permissions",
+    });
     toast.info(`${resource} · ${roleName}: ${next}`);
   };
 
   const openUserEdit = (u: UserRow) => {
-    setUserForm({ ...u, zonesArr: u.zones === "All" ? [...ALL_ZONES] : u.zones.split(",").map((s) => s.trim()).filter(Boolean) });
+    setUserForm({
+      ...u,
+      zonesArr:
+        u.zones === "All"
+          ? [...ALL_ZONES]
+          : u.zones
+              .split(",")
+              .map((s) => s.trim())
+              .filter(Boolean),
+    });
     setEditingUser(u);
   };
 
   const saveUser = () => {
     if (!editingUser) return;
-    const zonesStr = userForm.zonesArr.length === ALL_ZONES.length ? "All" : userForm.zonesArr.join(", ");
-    const next: UserRow = { name: userForm.name, email: userForm.email, role: userForm.role, zones: zonesStr, lastLogin: editingUser.lastLogin, status: userForm.status };
-    setUsers(users.map((u) => u.email === editingUser.email ? next : u));
-    addNotification({ title: "User updated", body: `${next.name} (${next.role})`, severity: "info", icon: "Users", link: "/permissions" });
+    const zonesStr =
+      userForm.zonesArr.length === ALL_ZONES.length
+        ? "All"
+        : userForm.zonesArr.join(", ");
+    const next: UserRow = {
+      name: userForm.name,
+      email: userForm.email,
+      role: userForm.role,
+      zones: zonesStr,
+      lastLogin: editingUser.lastLogin,
+      status: userForm.status,
+    };
+    setUsers(users.map((u) => (u.email === editingUser.email ? next : u)));
+    addNotification({
+      title: "User updated",
+      body: `${next.name} (${next.role})`,
+      severity: "info",
+      icon: "Users",
+      link: "/permissions",
+    });
     toast.success(`${next.name} updated`);
     setEditingUser(null);
   };
 
-  const openScopeEdit = (s: Scope) => { setScopeForm(s); setEditingScope(s); };
+  const openScopeEdit = (s: Scope) => {
+    setScopeForm(s);
+    setEditingScope(s);
+  };
   const saveScope = () => {
     if (!editingScope) return;
-    setScopes(scopes.map((s) => s.label === editingScope.label ? scopeForm : s));
-    addNotification({ title: "Scope updated", body: scopeForm.label, severity: "info", icon: "Layers", link: "/permissions" });
+    setScopes(
+      scopes.map((s) => (s.label === editingScope.label ? scopeForm : s)),
+    );
+    addNotification({
+      title: "Scope updated",
+      body: scopeForm.label,
+      severity: "info",
+      icon: "Layers",
+      link: "/permissions",
+    });
     toast.success(`Scope updated`);
     setEditingScope(null);
   };
 
   const toggleReview = (q: string) => {
-    setReviews(reviews.map((r) => r.quarter === q ? { ...r, status: r.status === "Complete" ? "In progress" : "Complete", completed: r.status === "Complete" ? r.completed : 100 } : r));
+    setReviews(
+      reviews.map((r) =>
+        r.quarter === q
+          ? {
+              ...r,
+              status: r.status === "Complete" ? "In progress" : "Complete",
+              completed: r.status === "Complete" ? r.completed : 100,
+            }
+          : r,
+      ),
+    );
     const r = reviews.find((x) => x.quarter === q);
-    addNotification({ title: "Access review updated", body: `${q} marked ${r?.status === "Complete" ? "in progress" : "complete"}`, severity: "success", icon: "ClipboardCheck", link: "/permissions" });
+    addNotification({
+      title: "Access review updated",
+      body: `${q} marked ${r?.status === "Complete" ? "in progress" : "complete"}`,
+      severity: "success",
+      icon: "ClipboardCheck",
+      link: "/permissions",
+    });
     toast.success(`${q} updated`);
   };
 
   return (
     <div className="max-w-[1600px] mx-auto p-6 space-y-6">
-      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-3">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex items-center gap-3"
+      >
         <div className="w-12 h-12 bg-violet-500/10 rounded-2xl flex items-center justify-center">
           <ShieldCheck className="w-6 h-6 text-violet-600 dark:text-violet-400" />
         </div>
         <div>
-          <h1 className="text-3xl tracking-tight text-slate-900 dark:text-white" style={{ fontWeight: 700 }}>Permissions</h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-0.5">Roles, users, scopes, and quarterly access reviews</p>
+          <h1
+            className="text-3xl tracking-tight text-slate-900 dark:text-white"
+            style={{ fontWeight: 700 }}
+          >
+            Permissions
+          </h1>
+          <p className="text-slate-500 dark:text-slate-400 mt-0.5">
+            Roles, users, scopes, and quarterly access reviews
+          </p>
         </div>
       </motion.div>
 
@@ -174,7 +461,11 @@ export default function PermissionsPage() {
           const Icon = t.Icon;
           const active = tab === t.id;
           return (
-            <button key={t.id} onClick={() => setTab(t.id)} className={`flex items-center gap-2 px-4 h-10 rounded-full text-sm transition-colors ${active ? "bg-emerald-600 text-white" : "text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/5"}`}>
+            <button
+              key={t.id}
+              onClick={() => setTab(t.id)}
+              className={`flex items-center gap-2 px-4 h-10 rounded-full text-sm transition-colors ${active ? "bg-emerald-600 text-white" : "text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/5"}`}
+            >
               <Icon className="w-4 h-4" /> {t.label}
             </button>
           );
@@ -187,19 +478,57 @@ export default function PermissionsPage() {
             {roles.map((r, i) => {
               const a = accentMap[r.accent];
               return (
-                <motion.div key={r.name} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }} whileHover={{ y: -3 }}>
+                <motion.div
+                  key={r.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                  whileHover={{ y: -3 }}
+                >
                   <GlassCard className="p-5">
-                    <div className={`w-12 h-12 ${a.bg} rounded-2xl flex items-center justify-center mb-3`}>
+                    <div
+                      className={`w-12 h-12 ${a.bg} rounded-2xl flex items-center justify-center mb-3`}
+                    >
                       <ShieldCheck className={`w-6 h-6 ${a.fg}`} />
                     </div>
-                    <h3 className="text-slate-900 dark:text-white" style={{ fontWeight: 600 }}>{r.name}</h3>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{r.desc}</p>
+                    <h3
+                      className="text-slate-900 dark:text-white"
+                      style={{ fontWeight: 600 }}
+                    >
+                      {r.name}
+                    </h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                      {r.desc}
+                    </p>
                     <div className="flex items-center gap-4 mt-4 text-sm">
-                      <div><span className="text-slate-900 dark:text-white" style={{ fontWeight: 600 }}>{r.users}</span> <span className="text-slate-500 dark:text-slate-400">users</span></div>
-                      <div><span className="text-slate-900 dark:text-white" style={{ fontWeight: 600 }}>{r.perms}</span> <span className="text-slate-500 dark:text-slate-400">perms</span></div>
+                      <div>
+                        <span
+                          className="text-slate-900 dark:text-white"
+                          style={{ fontWeight: 600 }}
+                        >
+                          {r.users}
+                        </span>{" "}
+                        <span className="text-slate-500 dark:text-slate-400">
+                          users
+                        </span>
+                      </div>
+                      <div>
+                        <span
+                          className="text-slate-900 dark:text-white"
+                          style={{ fontWeight: 600 }}
+                        >
+                          {r.perms}
+                        </span>{" "}
+                        <span className="text-slate-500 dark:text-slate-400">
+                          perms
+                        </span>
+                      </div>
                     </div>
                     {isAdmin && (
-                      <button onClick={() => openRoleEdit(r)} className="mt-4 w-full flex items-center justify-center gap-2 h-9 bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:bg-white dark:hover:bg-white/10 rounded-full text-sm text-slate-700 dark:text-slate-200">
+                      <button
+                        onClick={() => openRoleEdit(r)}
+                        className="mt-4 w-full flex items-center justify-center gap-2 h-9 bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:bg-white dark:hover:bg-white/10 rounded-full text-sm text-slate-700 dark:text-slate-200"
+                      >
                         <Edit3 className="w-4 h-4" /> Edit
                       </button>
                     )}
@@ -210,24 +539,45 @@ export default function PermissionsPage() {
           </div>
 
           <GlassCard className="p-6 overflow-x-auto">
-            <h3 className="text-lg tracking-tight text-slate-900 dark:text-white mb-1">Permissions Matrix</h3>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">{isAdmin ? "Click a cell to cycle None → Read → Write → Admin" : "Resource access by role"}</p>
+            <h3 className="text-lg tracking-tight text-slate-900 dark:text-white mb-1">
+              Permissions Matrix
+            </h3>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
+              {isAdmin
+                ? "Click a cell to cycle None → Read → Write → Admin"
+                : "Resource access by role"}
+            </p>
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-xs text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-white/10">
                   <th className="px-3 py-2">Resource</th>
-                  {roles.map((r) => <th key={r.name} className="px-3 py-2">{r.name}</th>)}
+                  {roles.map((r) => (
+                    <th key={r.name} className="px-3 py-2">
+                      {r.name}
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-white/5">
                 {RESOURCES.map((res) => (
                   <tr key={res}>
-                    <td className="px-3 py-3 text-slate-900 dark:text-white" style={{ fontWeight: 600 }}>{res}</td>
+                    <td
+                      className="px-3 py-3 text-slate-900 dark:text-white"
+                      style={{ fontWeight: 600 }}
+                    >
+                      {res}
+                    </td>
                     {roles.map((r) => {
                       const lvl = matrix[res]?.[r.name] || "None";
                       return (
                         <td key={r.name} className="px-3 py-3">
-                          <button onClick={() => cycleCell(res, r.name)} disabled={!isAdmin} className={`px-3 py-1 rounded-full text-xs ${pillAccent[lvl]} ${isAdmin ? "cursor-pointer hover:opacity-80" : "cursor-default"}`}>{lvl}</button>
+                          <button
+                            onClick={() => cycleCell(res, r.name)}
+                            disabled={!isAdmin}
+                            className={`px-3 py-1 rounded-full text-xs ${pillAccent[lvl]} ${isAdmin ? "cursor-pointer hover:opacity-80" : "cursor-default"}`}
+                          >
+                            {lvl}
+                          </button>
                         </td>
                       );
                     })}
@@ -256,21 +606,50 @@ export default function PermissionsPage() {
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-white/5">
                 {users.map((u) => (
-                  <tr key={u.email} className="hover:bg-slate-50/40 dark:hover:bg-white/5">
+                  <tr
+                    key={u.email}
+                    className="hover:bg-slate-50/40 dark:hover:bg-white/5"
+                  >
                     <td className="px-4 py-3 flex items-center gap-3">
                       <div className="w-9 h-9 rounded-full bg-emerald-500/10 flex items-center justify-center">
                         <UserCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                       </div>
-                      <span className="text-slate-900 dark:text-white" style={{ fontWeight: 600 }}>{u.name}</span>
+                      <span
+                        className="text-slate-900 dark:text-white"
+                        style={{ fontWeight: 600 }}
+                      >
+                        {u.name}
+                      </span>
                     </td>
-                    <td className="px-4 py-3 text-slate-500 dark:text-slate-400">{u.email}</td>
-                    <td className="px-4 py-3"><span className="px-2 py-0.5 rounded-full text-xs bg-violet-500/10 text-violet-700 dark:text-violet-300">{u.role}</span></td>
-                    <td className="px-4 py-3 text-slate-700 dark:text-slate-200">{u.zones}</td>
-                    <td className="px-4 py-3 text-slate-500 dark:text-slate-400 text-xs">{u.lastLogin}</td>
-                    <td className="px-4 py-3"><span className={`px-2 py-0.5 rounded-full text-xs ${u.status === "Active" ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300" : "bg-slate-500/10 text-slate-500 dark:text-slate-400"}`}>{u.status}</span></td>
+                    <td className="px-4 py-3 text-slate-500 dark:text-slate-400">
+                      {u.email}
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className="px-2 py-0.5 rounded-full text-xs bg-violet-500/10 text-violet-700 dark:text-violet-300">
+                        {u.role}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-slate-700 dark:text-slate-200">
+                      {u.zones}
+                    </td>
+                    <td className="px-4 py-3 text-slate-500 dark:text-slate-400 text-xs">
+                      {u.lastLogin}
+                    </td>
+                    <td className="px-4 py-3">
+                      <span
+                        className={`px-2 py-0.5 rounded-full text-xs ${u.status === "Active" ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300" : "bg-slate-500/10 text-slate-500 dark:text-slate-400"}`}
+                      >
+                        {u.status}
+                      </span>
+                    </td>
                     <td className="px-4 py-3 text-right">
                       {isAdmin && (
-                        <button onClick={() => openUserEdit(u)} className="px-3 h-8 text-xs bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:bg-white dark:hover:bg-white/10 rounded-full text-slate-700 dark:text-slate-200">Edit</button>
+                        <button
+                          onClick={() => openUserEdit(u)}
+                          className="px-3 h-8 text-xs bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:bg-white dark:hover:bg-white/10 rounded-full text-slate-700 dark:text-slate-200"
+                        >
+                          Edit
+                        </button>
                       )}
                     </td>
                   </tr>
@@ -284,17 +663,34 @@ export default function PermissionsPage() {
       {tab === "scopes" && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {scopes.map((s, i) => (
-            <motion.div key={s.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
+            <motion.div
+              key={s.label}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.05 }}
+            >
               <GlassCard className="p-5 flex items-center gap-4">
                 <div className="w-12 h-12 bg-sky-500/10 rounded-2xl flex items-center justify-center">
                   <Layers className="w-6 h-6 text-sky-600 dark:text-sky-400" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-slate-900 dark:text-white" style={{ fontWeight: 600 }}>{s.label}</h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Inherits from {s.inheritedFrom} · {s.count} permissions</p>
+                  <h3
+                    className="text-slate-900 dark:text-white"
+                    style={{ fontWeight: 600 }}
+                  >
+                    {s.label}
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                    Inherits from {s.inheritedFrom} · {s.count} permissions
+                  </p>
                 </div>
                 {isAdmin && (
-                  <button onClick={() => openScopeEdit(s)} className="px-3 h-8 text-xs bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:bg-white dark:hover:bg-white/10 rounded-full text-slate-700 dark:text-slate-200">Edit</button>
+                  <button
+                    onClick={() => openScopeEdit(s)}
+                    className="px-3 h-8 text-xs bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:bg-white dark:hover:bg-white/10 rounded-full text-slate-700 dark:text-slate-200"
+                  >
+                    Edit
+                  </button>
                 )}
               </GlassCard>
             </motion.div>
@@ -305,7 +701,12 @@ export default function PermissionsPage() {
       {tab === "reviews" && (
         <div className="space-y-4">
           {reviews.map((r, i) => (
-            <motion.div key={r.quarter} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
+            <motion.div
+              key={r.quarter}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.05 }}
+            >
               <GlassCard className="p-5">
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-3">
@@ -313,25 +714,51 @@ export default function PermissionsPage() {
                       <ClipboardCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                     </div>
                     <div>
-                      <h3 className="text-slate-900 dark:text-white" style={{ fontWeight: 600 }}>{r.quarter} Access Review</h3>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">Reviewer: {r.reviewer}</p>
+                      <h3
+                        className="text-slate-900 dark:text-white"
+                        style={{ fontWeight: 600 }}
+                      >
+                        {r.quarter} Access Review
+                      </h3>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">
+                        Reviewer: {r.reviewer}
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className={`px-3 py-1 rounded-full text-xs ${r.status === "Complete" ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300" : r.status === "In progress" ? "bg-sky-500/10 text-sky-700 dark:text-sky-300" : "bg-slate-500/10 text-slate-700 dark:text-slate-300"}`}>{r.status}</span>
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs ${r.status === "Complete" ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300" : r.status === "In progress" ? "bg-sky-500/10 text-sky-700 dark:text-sky-300" : "bg-slate-500/10 text-slate-700 dark:text-slate-300"}`}
+                    >
+                      {r.status}
+                    </span>
                     {isAdmin && (
-                      <button onClick={() => toggleReview(r.quarter)} className="px-3 h-8 text-xs bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:bg-white dark:hover:bg-white/10 rounded-full text-slate-700 dark:text-slate-200">
+                      <button
+                        onClick={() => toggleReview(r.quarter)}
+                        className="px-3 h-8 text-xs bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:bg-white dark:hover:bg-white/10 rounded-full text-slate-700 dark:text-slate-200"
+                      >
                         {r.status === "Complete" ? "Reopen" : "Mark Complete"}
                       </button>
                     )}
                   </div>
                 </div>
                 <div className="flex items-center justify-between mb-1.5 text-xs">
-                  <span className="text-slate-500 dark:text-slate-400">Progress</span>
-                  <span className="text-slate-700 dark:text-slate-200" style={{ fontWeight: 600 }}>{r.completed}%</span>
+                  <span className="text-slate-500 dark:text-slate-400">
+                    Progress
+                  </span>
+                  <span
+                    className="text-slate-700 dark:text-slate-200"
+                    style={{ fontWeight: 600 }}
+                  >
+                    {r.completed}%
+                  </span>
                 </div>
                 <div className="h-2 bg-slate-100 dark:bg-white/5 rounded-full overflow-hidden">
-                  <motion.div initial={{ width: 0 }} animate={{ width: `${r.completed}%` }} transition={{ duration: 1, delay: 0.2 }} className="h-full rounded-full bg-emerald-500" />
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${r.completed}%` }}
+                    transition={{ duration: 1, delay: 0.2 }}
+                    className="h-full rounded-full bg-emerald-500"
+                  />
                 </div>
               </GlassCard>
             </motion.div>
@@ -340,78 +767,217 @@ export default function PermissionsPage() {
       )}
 
       {editingRole && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setEditingRole(null)}>
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-white dark:bg-[#0a0e14] rounded-3xl p-6 max-w-lg w-full border border-slate-200 dark:border-white/10 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => setEditingRole(null)}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white dark:bg-[#0a0e14] rounded-3xl p-6 max-w-lg w-full border border-slate-200 dark:border-white/10 max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg tracking-tight text-slate-900 dark:text-white" style={{ fontWeight: 600 }}>Edit Role</h2>
-              <button onClick={() => setEditingRole(null)} className="p-1 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl"><X className="w-5 h-5 text-slate-500" /></button>
+              <h2
+                className="text-lg tracking-tight text-slate-900 dark:text-white"
+                style={{ fontWeight: 600 }}
+              >
+                Edit Role
+              </h2>
+              <button
+                onClick={() => setEditingRole(null)}
+                className="p-1 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl"
+              >
+                <X className="w-5 h-5 text-slate-500" />
+              </button>
             </div>
             <div className="space-y-3">
               <label className="block">
-                <span className="block text-sm text-slate-600 dark:text-slate-300 mb-1">Role name</span>
-                <input value={roleForm.name} readOnly className={`${inputCls} opacity-70`} />
+                <span className="block text-sm text-slate-600 dark:text-slate-300 mb-1">
+                  Role name
+                </span>
+                <input
+                  value={roleForm.name}
+                  readOnly
+                  className={`${inputCls} opacity-70`}
+                />
               </label>
               <label className="block">
-                <span className="block text-sm text-slate-600 dark:text-slate-300 mb-1">Description</span>
-                <input value={roleForm.desc} onChange={(e) => setRoleForm({ ...roleForm, desc: e.target.value })} className={inputCls} />
+                <span className="block text-sm text-slate-600 dark:text-slate-300 mb-1">
+                  Description
+                </span>
+                <input
+                  value={roleForm.desc}
+                  onChange={(e) =>
+                    setRoleForm({ ...roleForm, desc: e.target.value })
+                  }
+                  className={inputCls}
+                />
               </label>
               <div className="pt-2 space-y-2">
-                <p className="text-sm text-slate-600 dark:text-slate-300" style={{ fontWeight: 600 }}>Permissions</p>
+                <p
+                  className="text-sm text-slate-600 dark:text-slate-300"
+                  style={{ fontWeight: 600 }}
+                >
+                  Permissions
+                </p>
                 {RESOURCES.map((res) => (
-                  <div key={res} className="grid grid-cols-[1fr_auto] items-center gap-3">
-                    <span className="text-sm text-slate-700 dark:text-slate-200">{res}</span>
-                    <select value={roleForm.levels[res]} onChange={(e) => setRoleForm({ ...roleForm, levels: { ...roleForm.levels, [res]: e.target.value as Level } })} className="h-9 px-3 rounded-full bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs text-slate-700 dark:text-slate-200">
-                      {LEVELS.map((l) => <option key={l} value={l}>{l}</option>)}
+                  <div
+                    key={res}
+                    className="grid grid-cols-[1fr_auto] items-center gap-3"
+                  >
+                    <span className="text-sm text-slate-700 dark:text-slate-200">
+                      {res}
+                    </span>
+                    <select
+                      value={roleForm.levels[res]}
+                      onChange={(e) =>
+                        setRoleForm({
+                          ...roleForm,
+                          levels: {
+                            ...roleForm.levels,
+                            [res]: e.target.value as Level,
+                          },
+                        })
+                      }
+                      className="h-9 px-3 rounded-full bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs text-slate-700 dark:text-slate-200"
+                    >
+                      {LEVELS.map((l) => (
+                        <option key={l} value={l}>
+                          {l}
+                        </option>
+                      ))}
                     </select>
                   </div>
                 ))}
               </div>
             </div>
             <div className="mt-6 flex justify-end gap-2">
-              <button onClick={() => setEditingRole(null)} className="px-4 h-10 rounded-full bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm text-slate-700 dark:text-slate-200">Cancel</button>
-              <button onClick={saveRole} className="px-4 h-10 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-sm">Save Changes</button>
+              <button
+                onClick={() => setEditingRole(null)}
+                className="px-4 h-10 rounded-full bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm text-slate-700 dark:text-slate-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={saveRole}
+                className="px-4 h-10 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-sm"
+              >
+                Save Changes
+              </button>
             </div>
           </motion.div>
         </div>
       )}
 
       {editingUser && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setEditingUser(null)}>
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-white dark:bg-[#0a0e14] rounded-3xl p-6 max-w-lg w-full border border-slate-200 dark:border-white/10 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => setEditingUser(null)}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white dark:bg-[#0a0e14] rounded-3xl p-6 max-w-lg w-full border border-slate-200 dark:border-white/10 max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg tracking-tight text-slate-900 dark:text-white" style={{ fontWeight: 600 }}>Edit User</h2>
-              <button onClick={() => setEditingUser(null)} className="p-1 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl"><X className="w-5 h-5 text-slate-500" /></button>
+              <h2
+                className="text-lg tracking-tight text-slate-900 dark:text-white"
+                style={{ fontWeight: 600 }}
+              >
+                Edit User
+              </h2>
+              <button
+                onClick={() => setEditingUser(null)}
+                className="p-1 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl"
+              >
+                <X className="w-5 h-5 text-slate-500" />
+              </button>
             </div>
             <div className="space-y-3">
               <label className="block">
-                <span className="block text-sm text-slate-600 dark:text-slate-300 mb-1">Name</span>
-                <input value={userForm.name} onChange={(e) => setUserForm({ ...userForm, name: e.target.value })} className={inputCls} />
+                <span className="block text-sm text-slate-600 dark:text-slate-300 mb-1">
+                  Name
+                </span>
+                <input
+                  value={userForm.name}
+                  onChange={(e) =>
+                    setUserForm({ ...userForm, name: e.target.value })
+                  }
+                  className={inputCls}
+                />
               </label>
               <label className="block">
-                <span className="block text-sm text-slate-600 dark:text-slate-300 mb-1">Email</span>
-                <input value={userForm.email} onChange={(e) => setUserForm({ ...userForm, email: e.target.value })} className={inputCls} />
+                <span className="block text-sm text-slate-600 dark:text-slate-300 mb-1">
+                  Email
+                </span>
+                <input
+                  value={userForm.email}
+                  onChange={(e) =>
+                    setUserForm({ ...userForm, email: e.target.value })
+                  }
+                  className={inputCls}
+                />
               </label>
               <label className="block">
-                <span className="block text-sm text-slate-600 dark:text-slate-300 mb-1">Role</span>
-                <select value={userForm.role} onChange={(e) => setUserForm({ ...userForm, role: e.target.value })} className={inputCls}>
-                  {roles.map((r) => <option key={r.name} value={r.name}>{r.name}</option>)}
+                <span className="block text-sm text-slate-600 dark:text-slate-300 mb-1">
+                  Role
+                </span>
+                <select
+                  value={userForm.role}
+                  onChange={(e) =>
+                    setUserForm({ ...userForm, role: e.target.value })
+                  }
+                  className={inputCls}
+                >
+                  {roles.map((r) => (
+                    <option key={r.name} value={r.name}>
+                      {r.name}
+                    </option>
+                  ))}
                 </select>
               </label>
               <label className="block">
-                <span className="block text-sm text-slate-600 dark:text-slate-300 mb-1">Status</span>
-                <select value={userForm.status} onChange={(e) => setUserForm({ ...userForm, status: e.target.value })} className={inputCls}>
+                <span className="block text-sm text-slate-600 dark:text-slate-300 mb-1">
+                  Status
+                </span>
+                <select
+                  value={userForm.status}
+                  onChange={(e) =>
+                    setUserForm({ ...userForm, status: e.target.value })
+                  }
+                  className={inputCls}
+                >
                   <option value="Active">Active</option>
                   <option value="Inactive">Inactive</option>
                 </select>
               </label>
               <div>
-                <span className="block text-sm text-slate-600 dark:text-slate-300 mb-2">Zones</span>
+                <span className="block text-sm text-slate-600 dark:text-slate-300 mb-2">
+                  Zones
+                </span>
                 <div className="grid grid-cols-2 gap-2">
                   {ALL_ZONES.map((z) => {
                     const checked = userForm.zonesArr.includes(z);
                     return (
-                      <label key={z} className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
-                        <input type="checkbox" checked={checked} onChange={(e) => setUserForm({ ...userForm, zonesArr: e.target.checked ? [...userForm.zonesArr, z] : userForm.zonesArr.filter((x) => x !== z) })} className="accent-emerald-600" />
+                      <label
+                        key={z}
+                        className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={(e) =>
+                            setUserForm({
+                              ...userForm,
+                              zonesArr: e.target.checked
+                                ? [...userForm.zonesArr, z]
+                                : userForm.zonesArr.filter((x) => x !== z),
+                            })
+                          }
+                          className="accent-emerald-600"
+                        />
                         {z}
                       </label>
                     );
@@ -420,37 +986,100 @@ export default function PermissionsPage() {
               </div>
             </div>
             <div className="mt-6 flex justify-end gap-2">
-              <button onClick={() => setEditingUser(null)} className="px-4 h-10 rounded-full bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm text-slate-700 dark:text-slate-200">Cancel</button>
-              <button onClick={saveUser} className="px-4 h-10 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-sm">Save Changes</button>
+              <button
+                onClick={() => setEditingUser(null)}
+                className="px-4 h-10 rounded-full bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm text-slate-700 dark:text-slate-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={saveUser}
+                className="px-4 h-10 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-sm"
+              >
+                Save Changes
+              </button>
             </div>
           </motion.div>
         </div>
       )}
 
       {editingScope && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setEditingScope(null)}>
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-white dark:bg-[#0a0e14] rounded-3xl p-6 max-w-lg w-full border border-slate-200 dark:border-white/10" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => setEditingScope(null)}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white dark:bg-[#0a0e14] rounded-3xl p-6 max-w-lg w-full border border-slate-200 dark:border-white/10"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg tracking-tight text-slate-900 dark:text-white" style={{ fontWeight: 600 }}>Edit Scope</h2>
-              <button onClick={() => setEditingScope(null)} className="p-1 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl"><X className="w-5 h-5 text-slate-500" /></button>
+              <h2
+                className="text-lg tracking-tight text-slate-900 dark:text-white"
+                style={{ fontWeight: 600 }}
+              >
+                Edit Scope
+              </h2>
+              <button
+                onClick={() => setEditingScope(null)}
+                className="p-1 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl"
+              >
+                <X className="w-5 h-5 text-slate-500" />
+              </button>
             </div>
             <div className="space-y-3">
               <label className="block">
-                <span className="block text-sm text-slate-600 dark:text-slate-300 mb-1">Name</span>
-                <input value={scopeForm.label} onChange={(e) => setScopeForm({ ...scopeForm, label: e.target.value })} className={inputCls} />
+                <span className="block text-sm text-slate-600 dark:text-slate-300 mb-1">
+                  Name
+                </span>
+                <input
+                  value={scopeForm.label}
+                  onChange={(e) =>
+                    setScopeForm({ ...scopeForm, label: e.target.value })
+                  }
+                  className={inputCls}
+                />
               </label>
               <label className="block">
-                <span className="block text-sm text-slate-600 dark:text-slate-300 mb-1">Description</span>
-                <input value={scopeForm.description} onChange={(e) => setScopeForm({ ...scopeForm, description: e.target.value })} className={inputCls} />
+                <span className="block text-sm text-slate-600 dark:text-slate-300 mb-1">
+                  Description
+                </span>
+                <input
+                  value={scopeForm.description}
+                  onChange={(e) =>
+                    setScopeForm({ ...scopeForm, description: e.target.value })
+                  }
+                  className={inputCls}
+                />
               </label>
               <div>
-                <span className="block text-sm text-slate-600 dark:text-slate-300 mb-2">Allowed roles</span>
+                <span className="block text-sm text-slate-600 dark:text-slate-300 mb-2">
+                  Allowed roles
+                </span>
                 <div className="grid grid-cols-2 gap-2">
                   {roles.map((r) => {
                     const checked = scopeForm.allowedRoles.includes(r.name);
                     return (
-                      <label key={r.name} className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
-                        <input type="checkbox" checked={checked} onChange={(e) => setScopeForm({ ...scopeForm, allowedRoles: e.target.checked ? [...scopeForm.allowedRoles, r.name] : scopeForm.allowedRoles.filter((x) => x !== r.name) })} className="accent-emerald-600" />
+                      <label
+                        key={r.name}
+                        className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={(e) =>
+                            setScopeForm({
+                              ...scopeForm,
+                              allowedRoles: e.target.checked
+                                ? [...scopeForm.allowedRoles, r.name]
+                                : scopeForm.allowedRoles.filter(
+                                    (x) => x !== r.name,
+                                  ),
+                            })
+                          }
+                          className="accent-emerald-600"
+                        />
                         {r.name}
                       </label>
                     );
@@ -459,8 +1088,18 @@ export default function PermissionsPage() {
               </div>
             </div>
             <div className="mt-6 flex justify-end gap-2">
-              <button onClick={() => setEditingScope(null)} className="px-4 h-10 rounded-full bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm text-slate-700 dark:text-slate-200">Cancel</button>
-              <button onClick={saveScope} className="px-4 h-10 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-sm">Save Changes</button>
+              <button
+                onClick={() => setEditingScope(null)}
+                className="px-4 h-10 rounded-full bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm text-slate-700 dark:text-slate-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={saveScope}
+                className="px-4 h-10 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-sm"
+              >
+                Save Changes
+              </button>
             </div>
           </motion.div>
         </div>

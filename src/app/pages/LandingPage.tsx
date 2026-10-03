@@ -540,9 +540,9 @@ function StatCard({ stat, index }: { stat: Stat; index: number }) {
   const Icon = stat.icon;
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.8, y: 50 }}
+      initial={{ opacity: 0, scale: 0.9, y: 30 }}
       whileInView={{ opacity: 1, scale: 1, y: 0 }}
-      viewport={{ once: false, margin: "-50px" }}
+      viewport={{ once: true, margin: "-50px" }}
       transition={{
         delay: index * 0.1,
         duration: 0.5,
@@ -575,9 +575,9 @@ function FeatureCard({ feature, index }: { feature: FeatureT; index: number }) {
   const Icon = feature.icon;
   return (
     <motion.div
-      initial={{ opacity: 0, y: 50, rotateY: 90 }}
-      whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
-      viewport={{ once: false, margin: "-50px" }}
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
       transition={{ delay: index * 0.1, duration: 0.6 }}
       whileHover={{
         y: -15,
@@ -650,9 +650,9 @@ function StepItem({ step, index }: { step: StepT; index: number }) {
   const Icon = step.icon;
   return (
     <motion.div
-      initial={{ opacity: 0, y: 50, scale: 0.5 }}
+      initial={{ opacity: 0, y: 30, scale: 0.8 }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: false, margin: "-50px" }}
+      viewport={{ once: true, margin: "-50px" }}
       transition={{
         delay: index * 0.2,
         duration: 0.5,
@@ -745,9 +745,9 @@ function ImpactStatCard({ stat, index }: { stat: ImpactStatT; index: number }) {
   const Icon = stat.icon;
   return (
     <motion.div
-      initial={{ opacity: 0, y: 50 }}
+      initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: false, margin: "-100px" }}
+      viewport={{ once: true, margin: "-50px" }}
       transition={{ delay: index * 0.1, duration: 0.5 }}
       whileHover={{
         y: -10,
@@ -773,35 +773,29 @@ function ImpactStatCard({ stat, index }: { stat: ImpactStatT; index: number }) {
   );
 }
 
-// LiquidProgress: شريط تقدم "سا  ل" لذيذ بيعمل ويف لا نهائية
+// LiquidProgress: شريط تقدم سائل وسلس يستجيب لحركة السلايدر فوراً
 function LiquidProgress({ progress /* 0..1 */ }: { progress: number }) {
+  const percent = Math.min(100, Math.max(0, progress * 100));
   return (
-    <div className="relative h-6 bg-gray-200 rounded-full overflow-hidden">
-      <motion.div
-        animate={{ width: `${progress * 100}%` }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-        className="h-full bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 relative"
+    <div className="relative h-6 bg-gray-200/80 rounded-full overflow-hidden shadow-inner">
+      <div
+        className="h-full bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 relative transition-[width] duration-75 ease-out"
         style={{
+          width: `${percent}%`,
           borderRadius: "9999px",
-          boxShadow: "0 0 20px rgba(16,185,129,0.5)",
+          boxShadow: "0 0 15px rgba(16,185,129,0.4)",
         }}
       >
-        {/* طبقة لمعان بتمشي يمين شمال وتدي إحساس السائل */}
-        <motion.div
-          className="absolute inset-0"
-          animate={{ backgroundPosition: ["0% 0%", "100% 0%"] }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "linear",
-          }}
+        {/* طبقة لمعان ناعمة */}
+        <div
+          className="absolute inset-0 opacity-40 pointer-events-none"
           style={{
             backgroundImage:
-              "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%)",
+              "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%)",
             backgroundSize: "200% 100%",
           }}
         />
-      </motion.div>
+      </div>
     </div>
   );
 }
@@ -863,7 +857,7 @@ export default function LandingPage() {
                 <Recycle className="h-5 w-5 text-white" />
               </motion.div>
               <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-                RecycleHub
+                EcoSnap
               </span>
             </motion.div>
 
@@ -886,7 +880,11 @@ export default function LandingPage() {
 
             {/* أزرار الدخول والتسجيل */}
             <div className="flex items-center gap-2 flex-shrink-0">
-              <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }} className="hidden sm:block">
+              <motion.div
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.96 }}
+                className="hidden sm:block"
+              >
                 <Link
                   to="/login"
                   state={{ mode: "login" }}
@@ -896,7 +894,10 @@ export default function LandingPage() {
                 </Link>
               </motion.div>
 
-              <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
+              <motion.div
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.96 }}
+              >
                 <Link
                   to="/login"
                   state={{ mode: "signup" }}
@@ -923,7 +924,12 @@ export default function LandingPage() {
               transition={{ duration: 0.6 }}
             >
               <CyclingText
-                texts={["Recycle Smart", "Earn Rewards", "Save Planet", "Join Movement"]}
+                texts={[
+                  "Recycle Smart",
+                  "Earn Rewards",
+                  "Save Planet",
+                  "Join Movement",
+                ]}
               />
             </motion.h1>
 
@@ -985,7 +991,10 @@ export default function LandingPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8, duration: 0.6 }}
             >
-              <p className="text-xs uppercase tracking-[3px] text-slate-400 dark:text-white/40" style={{ fontWeight: 700 }}>
+              <p
+                className="text-xs uppercase tracking-[3px] text-slate-400 dark:text-white/40"
+                style={{ fontWeight: 700 }}
+              >
                 Try the Lamp concepts
               </p>
               <div className="flex flex-wrap gap-2 justify-center">
@@ -1002,7 +1011,10 @@ export default function LandingPage() {
                     className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm text-slate-700 dark:text-slate-200 hover:border-emerald-400 dark:hover:border-emerald-400 hover:text-emerald-600 dark:hover:text-emerald-300 transition-colors backdrop-blur"
                     style={{ fontWeight: 600 }}
                   >
-                    <span className="w-2.5 h-2.5 rounded-full" style={{ background: r.dot }} />
+                    <span
+                      className="w-2.5 h-2.5 rounded-full"
+                      style={{ background: r.dot }}
+                    />
                     {r.label}
                   </Link>
                 ))}
@@ -1173,15 +1185,11 @@ export default function LandingPage() {
                           {item.label}
                         </span>
                       </div>
-                      <motion.div
-                        key={item.value}
-                        initial={{ scale: 0.8, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ duration: 0.3 }}
-                        className={`text-3xl font-bold ${colorText[item.color as keyof typeof colorText]}`}
+                      <div
+                        className={`text-3xl font-bold tabular-nums ${colorText[item.color as keyof typeof colorText]}`}
                       >
                         {item.value}
-                      </motion.div>
+                      </div>
                     </motion.div>
                   );
                 })}
@@ -1389,7 +1397,7 @@ export default function LandingPage() {
                 <motion.div {...spinForever(20)}>
                   <Recycle className="w-6 h-6" />
                 </motion.div>
-                <span className="text-xl font-bold">RecycleHub</span>
+                <span className="text-xl font-bold">EcoSnap</span>
               </div>
               <p className="text-gray-400 text-sm">
                 Smart bottle recycling system with AI verification and instant
@@ -1440,7 +1448,7 @@ export default function LandingPage() {
           {/* حقوق النشر + لينك الباورد */}
           <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-sm text-gray-400">
-              © 2025 RecycleHub. All rights reserved.
+              © 2025 EcoSnap. All rights reserved.
             </p>
             <motion.a
               href="https://readdy.link"

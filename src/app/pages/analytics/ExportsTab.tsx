@@ -42,14 +42,42 @@ interface ScheduleEntry {
 }
 
 const initialHistory: ReportEntry[] = [
-  { id: "RPT-2041", name: "Monthly Analytics — May", kind: "CSV", size: "42 KB", when: "Today, 10:24" },
-  { id: "RPT-2040", name: "Executive Summary — Q1", kind: "PDF", size: "1.8 MB", when: "Yesterday, 17:02" },
-  { id: "RPT-2039", name: "Regional Performance — Apr", kind: "CSV", size: "28 KB", when: "Apr 30, 09:11" },
+  {
+    id: "RPT-2041",
+    name: "Monthly Analytics — May",
+    kind: "CSV",
+    size: "42 KB",
+    when: "Today, 10:24",
+  },
+  {
+    id: "RPT-2040",
+    name: "Executive Summary — Q1",
+    kind: "PDF",
+    size: "1.8 MB",
+    when: "Yesterday, 17:02",
+  },
+  {
+    id: "RPT-2039",
+    name: "Regional Performance — Apr",
+    kind: "CSV",
+    size: "28 KB",
+    when: "Apr 30, 09:11",
+  },
 ];
 
 const initialScheduled: ScheduleEntry[] = [
-  { id: 1, name: "Weekly Executive Snapshot", cadence: "Every Monday · 08:00", format: "PDF" },
-  { id: 2, name: "Monthly Operations Report", cadence: "1st of month · 06:00", format: "CSV" },
+  {
+    id: 1,
+    name: "Weekly Executive Snapshot",
+    cadence: "Every Monday · 08:00",
+    format: "PDF",
+  },
+  {
+    id: 2,
+    name: "Monthly Operations Report",
+    cadence: "1st of month · 06:00",
+    format: "CSV",
+  },
 ];
 
 const allMetrics = [
@@ -80,8 +108,14 @@ function downloadHtmlReport(name: string, rows: any[]) {
 
 export default function ExportsTab({ timeRange }: Props) {
   const { resolvedTheme } = useTheme();
-  const [history, setHistory] = useLocalStorage<ReportEntry[]>("ecovoid.analytics.history.v1", initialHistory);
-  const [scheduled, setScheduled] = useLocalStorage<ScheduleEntry[]>("ecovoid.analytics.scheduled.v1", initialScheduled);
+  const [history, setHistory] = useLocalStorage<ReportEntry[]>(
+    "EcoSnap.analytics.history.v1",
+    initialHistory,
+  );
+  const [scheduled, setScheduled] = useLocalStorage<ScheduleEntry[]>(
+    "EcoSnap.analytics.scheduled.v1",
+    initialScheduled,
+  );
 
   const [showCustom, setShowCustom] = useState(false);
   const [showSchedule, setShowSchedule] = useState(false);
@@ -90,7 +124,12 @@ export default function ExportsTab({ timeRange }: Props) {
     format: "CSV" as "CSV" | "PDF",
     metrics: ["month", "collections", "revenue", "recycled", "efficiency"],
   });
-  const [scheduleForm, setScheduleForm] = useState({ name: "", cadence: "weekly", time: "08:00", format: "CSV" as "CSV" | "PDF" });
+  const [scheduleForm, setScheduleForm] = useState({
+    name: "",
+    cadence: "weekly",
+    time: "08:00",
+    format: "CSV" as "CSV" | "PDF",
+  });
 
   const runExport = (kind: "CSV" | "PDF") => {
     const data = monthlyData.slice(-rangeMonths[timeRange]);
@@ -105,7 +144,8 @@ export default function ExportsTab({ timeRange }: Props) {
       id: `RPT-${Math.floor(2042 + Math.random() * 900)}`,
       name: `${kind === "CSV" ? "Data Export" : "PDF Report"} — ${new Date().toLocaleDateString()}`,
       kind,
-      size: kind === "CSV" ? `${Math.round(2 + data.length * 1.2)} KB` : "1.2 MB",
+      size:
+        kind === "CSV" ? `${Math.round(2 + data.length * 1.2)} KB` : "1.2 MB",
       when: "Just now",
     };
     setHistory([entry, ...history].slice(0, 12));
@@ -123,7 +163,11 @@ export default function ExportsTab({ timeRange }: Props) {
     const cols = allMetrics.filter((c) => customForm.metrics.includes(c.key));
     const data = monthlyData.slice(-rangeMonths[timeRange]);
     if (customForm.format === "CSV") {
-      exportToCsv(customForm.name.replace(/\s+/g, "-").toLowerCase(), data, cols);
+      exportToCsv(
+        customForm.name.replace(/\s+/g, "-").toLowerCase(),
+        data,
+        cols,
+      );
     } else {
       downloadHtmlReport(customForm.name, data);
     }
@@ -131,7 +175,10 @@ export default function ExportsTab({ timeRange }: Props) {
       id: `RPT-${Math.floor(2042 + Math.random() * 900)}`,
       name: customForm.name,
       kind: customForm.format,
-      size: customForm.format === "CSV" ? `${Math.round(2 + data.length * 1.2)} KB` : "1.4 MB",
+      size:
+        customForm.format === "CSV"
+          ? `${Math.round(2 + data.length * 1.2)} KB`
+          : "1.4 MB",
       when: "Just now",
     };
     setHistory([entry, ...history].slice(0, 12));
@@ -145,10 +192,13 @@ export default function ExportsTab({ timeRange }: Props) {
       return;
     }
     const cadenceLabel =
-      scheduleForm.cadence === "daily" ? `Daily · ${scheduleForm.time}` :
-      scheduleForm.cadence === "weekly" ? `Every Monday · ${scheduleForm.time}` :
-      scheduleForm.cadence === "monthly" ? `1st of month · ${scheduleForm.time}` :
-      `Quarterly · ${scheduleForm.time}`;
+      scheduleForm.cadence === "daily"
+        ? `Daily · ${scheduleForm.time}`
+        : scheduleForm.cadence === "weekly"
+          ? `Every Monday · ${scheduleForm.time}`
+          : scheduleForm.cadence === "monthly"
+            ? `1st of month · ${scheduleForm.time}`
+            : `Quarterly · ${scheduleForm.time}`;
     const entry: ScheduleEntry = {
       id: Date.now(),
       name: scheduleForm.name,
@@ -157,7 +207,12 @@ export default function ExportsTab({ timeRange }: Props) {
     };
     setScheduled([entry, ...scheduled]);
     setShowSchedule(false);
-    setScheduleForm({ name: "", cadence: "weekly", time: "08:00", format: "CSV" });
+    setScheduleForm({
+      name: "",
+      cadence: "weekly",
+      time: "08:00",
+      format: "CSV",
+    });
     toast.success(`Scheduled "${entry.name}"`);
   };
 
@@ -241,7 +296,10 @@ export default function ExportsTab({ timeRange }: Props) {
                 {r.title}
               </h3>
               <p className="text-xs mt-1 opacity-90">{r.body}</p>
-              <div className="mt-4 inline-flex items-center gap-1.5 text-xs" style={{ fontWeight: 700 }}>
+              <div
+                className="mt-4 inline-flex items-center gap-1.5 text-xs"
+                style={{ fontWeight: 700 }}
+              >
                 <Download className="w-3.5 h-3.5" />
                 {r.cta}
               </div>
@@ -257,7 +315,10 @@ export default function ExportsTab({ timeRange }: Props) {
               <Calendar className="w-4 h-4 text-violet-600 dark:text-violet-400" />
             </div>
             <div>
-              <h3 className="text-sm tracking-tight text-slate-900 dark:text-white" style={{ fontWeight: 700 }}>
+              <h3
+                className="text-sm tracking-tight text-slate-900 dark:text-white"
+                style={{ fontWeight: 700 }}
+              >
                 Scheduled Reports
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
@@ -280,7 +341,10 @@ export default function ExportsTab({ timeRange }: Props) {
             Icon={Calendar}
             title="No scheduled reports"
             description="Set up recurring deliveries to keep stakeholders in the loop."
-            primaryAction={{ label: "New Schedule", onClick: () => setShowSchedule(true) }}
+            primaryAction={{
+              label: "New Schedule",
+              onClick: () => setShowSchedule(true),
+            }}
           />
         ) : (
           <div className="space-y-2">
@@ -294,7 +358,10 @@ export default function ExportsTab({ timeRange }: Props) {
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-sm text-slate-900 dark:text-white truncate" style={{ fontWeight: 700 }}>
+                    <p
+                      className="text-sm text-slate-900 dark:text-white truncate"
+                      style={{ fontWeight: 700 }}
+                    >
                       {s.name}
                     </p>
                     <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1.5 mt-0.5">
@@ -304,7 +371,10 @@ export default function ExportsTab({ timeRange }: Props) {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[11px] px-2 py-1 rounded-full bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300" style={{ fontWeight: 700 }}>
+                  <span
+                    className="text-[11px] px-2 py-1 rounded-full bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300"
+                    style={{ fontWeight: 700 }}
+                  >
                     {s.format}
                   </span>
                   <button
@@ -327,7 +397,10 @@ export default function ExportsTab({ timeRange }: Props) {
             <History className="w-4 h-4 text-slate-600 dark:text-slate-300" />
           </div>
           <div>
-            <h3 className="text-sm tracking-tight text-slate-900 dark:text-white" style={{ fontWeight: 700 }}>
+            <h3
+              className="text-sm tracking-tight text-slate-900 dark:text-white"
+              style={{ fontWeight: 700 }}
+            >
               Report History
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
@@ -344,7 +417,10 @@ export default function ExportsTab({ timeRange }: Props) {
           />
         ) : (
           <div className="overflow-hidden rounded-2xl border border-slate-200 dark:border-white/10">
-            <div className="grid grid-cols-[1fr_80px_100px_140px] gap-2 px-4 py-2.5 bg-slate-50 dark:bg-white/[0.04] text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400" style={{ fontWeight: 700 }}>
+            <div
+              className="grid grid-cols-[1fr_80px_100px_140px] gap-2 px-4 py-2.5 bg-slate-50 dark:bg-white/[0.04] text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400"
+              style={{ fontWeight: 700 }}
+            >
               <span>Report</span>
               <span>Type</span>
               <span>Size</span>
@@ -356,16 +432,28 @@ export default function ExportsTab({ timeRange }: Props) {
                 className="grid grid-cols-[1fr_80px_100px_140px] gap-2 px-4 py-3 items-center border-t border-slate-200 dark:border-white/10 hover:bg-white/60 dark:hover:bg-white/[0.04] transition-colors"
               >
                 <div className="min-w-0">
-                  <p className="text-sm text-slate-900 dark:text-white truncate" style={{ fontWeight: 600 }}>
+                  <p
+                    className="text-sm text-slate-900 dark:text-white truncate"
+                    style={{ fontWeight: 600 }}
+                  >
                     {h.name}
                   </p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">{h.id}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    {h.id}
+                  </p>
                 </div>
-                <span className={`text-[11px] px-2 py-0.5 rounded-full w-fit ${h.kind === "CSV" ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300" : "bg-sky-500/10 text-sky-700 dark:text-sky-300"}`} style={{ fontWeight: 700 }}>
+                <span
+                  className={`text-[11px] px-2 py-0.5 rounded-full w-fit ${h.kind === "CSV" ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300" : "bg-sky-500/10 text-sky-700 dark:text-sky-300"}`}
+                  style={{ fontWeight: 700 }}
+                >
                   {h.kind}
                 </span>
-                <span className="text-xs text-slate-500 dark:text-slate-400 tabular-nums">{h.size}</span>
-                <span className="text-xs text-slate-500 dark:text-slate-400">{h.when}</span>
+                <span className="text-xs text-slate-500 dark:text-slate-400 tabular-nums">
+                  {h.size}
+                </span>
+                <span className="text-xs text-slate-500 dark:text-slate-400">
+                  {h.when}
+                </span>
               </div>
             ))}
           </div>
@@ -374,29 +462,64 @@ export default function ExportsTab({ timeRange }: Props) {
 
       <AnimatePresence>
         {showCustom && (
-          <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setShowCustom(false)}>
-            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="bg-white dark:bg-[#0a0e14] rounded-3xl max-w-lg w-full border border-slate-200 dark:border-white/10" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
+            onClick={() => setShowCustom(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-white dark:bg-[#0a0e14] rounded-3xl max-w-lg w-full border border-slate-200 dark:border-white/10"
+              onClick={(e) => e.stopPropagation()}
+            >
               <div className="flex items-center justify-between p-6 border-b border-slate-200 dark:border-white/10">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-violet-500/10 rounded-2xl flex items-center justify-center">
                     <FileText className="w-6 h-6 text-violet-600 dark:text-violet-400" />
                   </div>
                   <div>
-                    <h2 className="text-xl tracking-tight text-slate-900 dark:text-white" style={{ fontWeight: 600 }}>Build Custom Report</h2>
-                    <p className="text-sm text-slate-500 dark:text-slate-400">Pick metrics and a format</p>
+                    <h2
+                      className="text-xl tracking-tight text-slate-900 dark:text-white"
+                      style={{ fontWeight: 600 }}
+                    >
+                      Build Custom Report
+                    </h2>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">
+                      Pick metrics and a format
+                    </p>
                   </div>
                 </div>
-                <button onClick={() => setShowCustom(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl">
+                <button
+                  onClick={() => setShowCustom(false)}
+                  className="p-2 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl"
+                >
                   <X className="w-5 h-5 text-slate-500" />
                 </button>
               </div>
               <div className="p-6 space-y-4">
                 <label className="block">
-                  <span className="block text-sm text-slate-700 dark:text-slate-300 mb-1.5" style={{ fontWeight: 600 }}>Report Name</span>
-                  <input value={customForm.name} onChange={(e) => setCustomForm({ ...customForm, name: e.target.value })} className="w-full h-10 px-4 rounded-full bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-400/50" />
+                  <span
+                    className="block text-sm text-slate-700 dark:text-slate-300 mb-1.5"
+                    style={{ fontWeight: 600 }}
+                  >
+                    Report Name
+                  </span>
+                  <input
+                    value={customForm.name}
+                    onChange={(e) =>
+                      setCustomForm({ ...customForm, name: e.target.value })
+                    }
+                    className="w-full h-10 px-4 rounded-full bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-400/50"
+                  />
                 </label>
                 <div>
-                  <span className="block text-sm text-slate-700 dark:text-slate-300 mb-2" style={{ fontWeight: 600 }}>Metrics</span>
+                  <span
+                    className="block text-sm text-slate-700 dark:text-slate-300 mb-2"
+                    style={{ fontWeight: 600 }}
+                  >
+                    Metrics
+                  </span>
                   <div className="grid grid-cols-2 gap-2">
                     {allMetrics.map((m) => {
                       const selected = customForm.metrics.includes(m.key);
@@ -404,12 +527,14 @@ export default function ExportsTab({ timeRange }: Props) {
                         <button
                           key={m.key}
                           type="button"
-                          onClick={() => setCustomForm({
-                            ...customForm,
-                            metrics: selected
-                              ? customForm.metrics.filter((k) => k !== m.key)
-                              : [...customForm.metrics, m.key],
-                          })}
+                          onClick={() =>
+                            setCustomForm({
+                              ...customForm,
+                              metrics: selected
+                                ? customForm.metrics.filter((k) => k !== m.key)
+                                : [...customForm.metrics, m.key],
+                            })
+                          }
                           className={`px-3 h-9 rounded-full text-xs border transition-colors ${selected ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/40" : "bg-white/80 dark:bg-white/5 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-white/10"}`}
                           style={{ fontWeight: 600 }}
                         >
@@ -420,13 +545,20 @@ export default function ExportsTab({ timeRange }: Props) {
                   </div>
                 </div>
                 <div>
-                  <span className="block text-sm text-slate-700 dark:text-slate-300 mb-2" style={{ fontWeight: 600 }}>Format</span>
+                  <span
+                    className="block text-sm text-slate-700 dark:text-slate-300 mb-2"
+                    style={{ fontWeight: 600 }}
+                  >
+                    Format
+                  </span>
                   <div className="flex gap-2">
                     {(["CSV", "PDF"] as const).map((f) => (
                       <button
                         key={f}
                         type="button"
-                        onClick={() => setCustomForm({ ...customForm, format: f })}
+                        onClick={() =>
+                          setCustomForm({ ...customForm, format: f })
+                        }
                         className={`flex-1 h-10 rounded-full text-sm border ${customForm.format === f ? "border-emerald-500 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300" : "border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300"}`}
                         style={{ fontWeight: 600 }}
                       >
@@ -437,39 +569,94 @@ export default function ExportsTab({ timeRange }: Props) {
                 </div>
               </div>
               <div className="flex items-center justify-end gap-2 p-6 border-t border-slate-200 dark:border-white/10">
-                <button onClick={() => setShowCustom(false)} className="px-5 h-10 bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 rounded-full text-sm">Cancel</button>
-                <button onClick={runCustom} className="px-5 h-10 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full text-sm">Generate</button>
+                <button
+                  onClick={() => setShowCustom(false)}
+                  className="px-5 h-10 bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 rounded-full text-sm"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={runCustom}
+                  className="px-5 h-10 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full text-sm"
+                >
+                  Generate
+                </button>
               </div>
             </motion.div>
           </div>
         )}
 
         {showSchedule && (
-          <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setShowSchedule(false)}>
-            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="bg-white dark:bg-[#0a0e14] rounded-3xl max-w-lg w-full border border-slate-200 dark:border-white/10" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
+            onClick={() => setShowSchedule(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-white dark:bg-[#0a0e14] rounded-3xl max-w-lg w-full border border-slate-200 dark:border-white/10"
+              onClick={(e) => e.stopPropagation()}
+            >
               <div className="flex items-center justify-between p-6 border-b border-slate-200 dark:border-white/10">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-violet-500/10 rounded-2xl flex items-center justify-center">
                     <Calendar className="w-6 h-6 text-violet-600 dark:text-violet-400" />
                   </div>
                   <div>
-                    <h2 className="text-xl tracking-tight text-slate-900 dark:text-white" style={{ fontWeight: 600 }}>New Schedule</h2>
-                    <p className="text-sm text-slate-500 dark:text-slate-400">Automate recurring exports</p>
+                    <h2
+                      className="text-xl tracking-tight text-slate-900 dark:text-white"
+                      style={{ fontWeight: 600 }}
+                    >
+                      New Schedule
+                    </h2>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">
+                      Automate recurring exports
+                    </p>
                   </div>
                 </div>
-                <button onClick={() => setShowSchedule(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl">
+                <button
+                  onClick={() => setShowSchedule(false)}
+                  className="p-2 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl"
+                >
                   <X className="w-5 h-5 text-slate-500" />
                 </button>
               </div>
               <div className="p-6 space-y-4">
                 <label className="block">
-                  <span className="block text-sm text-slate-700 dark:text-slate-300 mb-1.5" style={{ fontWeight: 600 }}>Schedule Name</span>
-                  <input value={scheduleForm.name} onChange={(e) => setScheduleForm({ ...scheduleForm, name: e.target.value })} placeholder="e.g., Weekly Snapshot" className="w-full h-10 px-4 rounded-full bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-400/50" />
+                  <span
+                    className="block text-sm text-slate-700 dark:text-slate-300 mb-1.5"
+                    style={{ fontWeight: 600 }}
+                  >
+                    Schedule Name
+                  </span>
+                  <input
+                    value={scheduleForm.name}
+                    onChange={(e) =>
+                      setScheduleForm({ ...scheduleForm, name: e.target.value })
+                    }
+                    placeholder="e.g., Weekly Snapshot"
+                    className="w-full h-10 px-4 rounded-full bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-400/50"
+                  />
                 </label>
                 <div className="grid grid-cols-2 gap-3">
                   <label className="block">
-                    <span className="block text-sm text-slate-700 dark:text-slate-300 mb-1.5" style={{ fontWeight: 600 }}>Cadence</span>
-                    <select value={scheduleForm.cadence} onChange={(e) => setScheduleForm({ ...scheduleForm, cadence: e.target.value })} className="w-full h-10 px-4 rounded-full bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-400/50">
+                    <span
+                      className="block text-sm text-slate-700 dark:text-slate-300 mb-1.5"
+                      style={{ fontWeight: 600 }}
+                    >
+                      Cadence
+                    </span>
+                    <select
+                      value={scheduleForm.cadence}
+                      onChange={(e) =>
+                        setScheduleForm({
+                          ...scheduleForm,
+                          cadence: e.target.value,
+                        })
+                      }
+                      className="w-full h-10 px-4 rounded-full bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-400/50"
+                    >
                       <option value="daily">Daily</option>
                       <option value="weekly">Weekly</option>
                       <option value="monthly">Monthly</option>
@@ -477,18 +664,40 @@ export default function ExportsTab({ timeRange }: Props) {
                     </select>
                   </label>
                   <label className="block">
-                    <span className="block text-sm text-slate-700 dark:text-slate-300 mb-1.5" style={{ fontWeight: 600 }}>Delivery Time</span>
-                    <input type="time" value={scheduleForm.time} onChange={(e) => setScheduleForm({ ...scheduleForm, time: e.target.value })} className="w-full h-10 px-4 rounded-full bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-400/50" />
+                    <span
+                      className="block text-sm text-slate-700 dark:text-slate-300 mb-1.5"
+                      style={{ fontWeight: 600 }}
+                    >
+                      Delivery Time
+                    </span>
+                    <input
+                      type="time"
+                      value={scheduleForm.time}
+                      onChange={(e) =>
+                        setScheduleForm({
+                          ...scheduleForm,
+                          time: e.target.value,
+                        })
+                      }
+                      className="w-full h-10 px-4 rounded-full bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-400/50"
+                    />
                   </label>
                 </div>
                 <div>
-                  <span className="block text-sm text-slate-700 dark:text-slate-300 mb-2" style={{ fontWeight: 600 }}>Format</span>
+                  <span
+                    className="block text-sm text-slate-700 dark:text-slate-300 mb-2"
+                    style={{ fontWeight: 600 }}
+                  >
+                    Format
+                  </span>
                   <div className="flex gap-2">
                     {(["CSV", "PDF"] as const).map((f) => (
                       <button
                         key={f}
                         type="button"
-                        onClick={() => setScheduleForm({ ...scheduleForm, format: f })}
+                        onClick={() =>
+                          setScheduleForm({ ...scheduleForm, format: f })
+                        }
                         className={`flex-1 h-10 rounded-full text-sm border ${scheduleForm.format === f ? "border-emerald-500 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300" : "border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300"}`}
                         style={{ fontWeight: 600 }}
                       >
@@ -499,8 +708,18 @@ export default function ExportsTab({ timeRange }: Props) {
                 </div>
               </div>
               <div className="flex items-center justify-end gap-2 p-6 border-t border-slate-200 dark:border-white/10">
-                <button onClick={() => setShowSchedule(false)} className="px-5 h-10 bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 rounded-full text-sm">Cancel</button>
-                <button onClick={saveSchedule} className="px-5 h-10 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full text-sm">Save Schedule</button>
+                <button
+                  onClick={() => setShowSchedule(false)}
+                  className="px-5 h-10 bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 rounded-full text-sm"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={saveSchedule}
+                  className="px-5 h-10 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full text-sm"
+                >
+                  Save Schedule
+                </button>
               </div>
             </motion.div>
           </div>

@@ -15,7 +15,7 @@ import {
   Search,
   Filter,
 } from "lucide-react";
-import type { Badge } from "../../types/recyclehub";
+import type { Badge } from "../../types/EcoSnap";
 
 const badgesData: Badge[] = [
   {
@@ -124,8 +124,12 @@ const iconMap: Record<string, any> = {
 
 export default function Badges() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterCategory, setFilterCategory] = useState<"all" | Badge["category"]>("all");
-  const [filterRarity, setFilterRarity] = useState<"all" | Badge["rarity"]>("all");
+  const [filterCategory, setFilterCategory] = useState<
+    "all" | Badge["category"]
+  >("all");
+  const [filterRarity, setFilterRarity] = useState<"all" | Badge["rarity"]>(
+    "all",
+  );
 
   const getRarityColor = (rarity: Badge["rarity"]) => {
     switch (rarity) {
@@ -170,8 +174,10 @@ export default function Badges() {
     const matchesSearch =
       badge.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       badge.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = filterCategory === "all" || badge.category === filterCategory;
-    const matchesRarity = filterRarity === "all" || badge.rarity === filterRarity;
+    const matchesCategory =
+      filterCategory === "all" || badge.category === filterCategory;
+    const matchesRarity =
+      filterRarity === "all" || badge.rarity === filterRarity;
     return matchesSearch && matchesCategory && matchesRarity;
   });
 
@@ -187,10 +193,10 @@ export default function Badges() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Badges & Achievements</h1>
-        <p className="text-gray-600 mt-1">
-          Manage and track user achievements
-        </p>
+        <h1 className="text-2xl font-bold text-gray-900">
+          Badges & Achievements
+        </h1>
+        <p className="text-gray-600 mt-1">Manage and track user achievements</p>
       </div>
 
       {/* Stats */}
@@ -267,7 +273,7 @@ export default function Badges() {
             <div
               key={badge.id}
               className={`bg-white rounded-xl shadow-sm border-2 overflow-hidden hover:shadow-md transition-all ${getRarityColor(
-                badge.rarity
+                badge.rarity,
               )}`}
             >
               <div
@@ -278,7 +284,7 @@ export default function Badges() {
                 <div className="flex items-start justify-between mb-4">
                   <div
                     className={`p-4 bg-gradient-to-br ${getRarityGradient(
-                      badge.rarity
+                      badge.rarity,
                     )} rounded-xl`}
                   >
                     <Icon className="w-8 h-8 text-white" />
@@ -286,14 +292,14 @@ export default function Badges() {
                   <div className="flex flex-col gap-2">
                     <span
                       className={`px-3 py-1 text-xs rounded-full font-medium ${getCategoryColor(
-                        badge.category
+                        badge.category,
                       )}`}
                     >
                       {badge.category}
                     </span>
                     <span
                       className={`px-3 py-1 text-xs rounded-full font-medium capitalize ${getRarityColor(
-                        badge.rarity
+                        badge.rarity,
                       )}`}
                     >
                       {badge.rarity}

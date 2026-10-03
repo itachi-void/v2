@@ -44,22 +44,29 @@ interface NotificationSettings {
   sms: boolean;
 }
 
-
 export default function SettingsPage() {
   const { theme, resolvedTheme, setTheme } = useTheme();
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<Tab>("profile");
-  const [profile, setProfile] = useLocalStorage<ProfileSettings>("ecovoid_settings_profile", {
-    name: user?.name ?? "Admin User",
-    email: user?.email ?? "admin@ecovoid.io",
-    phone: "+20 100 555 1212",
-    location: "Cairo, Egypt",
-  });
-  const [notifications, setNotifications] = useLocalStorage<NotificationSettings>(
-    "ecovoid_settings_notifications",
-    { email: true, push: true, sms: false }
+  const [profile, setProfile] = useLocalStorage<ProfileSettings>(
+    "EcoSnap_settings_profile",
+    {
+      name: user?.name ?? "Admin User",
+      email: user?.email ?? "admin@EcoSnap.io",
+      phone: "+20 100 555 1212",
+      location: "Cairo, Egypt",
+    },
   );
-  const [avatar, setAvatar] = useLocalStorage<string>("ecovoid.settings.avatar", "");
+  const [notifications, setNotifications] =
+    useLocalStorage<NotificationSettings>("EcoSnap_settings_notifications", {
+      email: true,
+      push: true,
+      sms: false,
+    });
+  const [avatar, setAvatar] = useLocalStorage<string>(
+    "EcoSnap.settings.avatar",
+    "",
+  );
   const fileRef = useRef<HTMLInputElement>(null);
   const { addNotification } = useNotifications();
   const [currentPassword, setCurrentPassword] = useState("");
@@ -78,11 +85,25 @@ export default function SettingsPage() {
   };
 
   const handleUpdatePassword = () => {
-    if (newPassword.length < 8) { toast.error("Password must be at least 8 characters"); return; }
-    if (newPassword !== confirmPassword) { toast.error("Passwords do not match"); return; }
+    if (newPassword.length < 8) {
+      toast.error("Password must be at least 8 characters");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
     toast.success("Password updated");
-    addNotification({ title: "Password updated", body: "Your account password was changed.", severity: "success", icon: "Shield", link: "/settings" });
-    setCurrentPassword(""); setNewPassword(""); setConfirmPassword("");
+    addNotification({
+      title: "Password updated",
+      body: "Your account password was changed.",
+      severity: "success",
+      icon: "Shield",
+      link: "/settings",
+    });
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
   };
 
   const handleDownloadData = () => {
@@ -96,16 +117,20 @@ export default function SettingsPage() {
       smsNotifications: notifications.sms,
       avatarUploaded: !!avatar,
     };
-    exportToCsv("ecovoid-user-data", [row], [
-      { key: "name", label: "Name" },
-      { key: "email", label: "Email" },
-      { key: "phone", label: "Phone" },
-      { key: "location", label: "Location" },
-      { key: "emailNotifications", label: "Email Notifications" },
-      { key: "pushNotifications", label: "Push Notifications" },
-      { key: "smsNotifications", label: "SMS Notifications" },
-      { key: "avatarUploaded", label: "Avatar Uploaded" },
-    ]);
+    exportToCsv(
+      "EcoSnap-user-data",
+      [row],
+      [
+        { key: "name", label: "Name" },
+        { key: "email", label: "Email" },
+        { key: "phone", label: "Phone" },
+        { key: "location", label: "Location" },
+        { key: "emailNotifications", label: "Email Notifications" },
+        { key: "pushNotifications", label: "Push Notifications" },
+        { key: "smsNotifications", label: "SMS Notifications" },
+        { key: "avatarUploaded", label: "Avatar Uploaded" },
+      ],
+    );
     toast.success("Data exported");
   };
 
@@ -117,17 +142,29 @@ export default function SettingsPage() {
     { id: "data", name: "Data", icon: Database, accent: "amber" },
   ];
 
-  const inputClass = "w-full px-4 h-10 rounded-full bg-white/80 dark:bg-white/10 border border-slate-200 dark:border-white/20 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 dark:focus:ring-emerald-400/70";
+  const inputClass =
+    "w-full px-4 h-10 rounded-full bg-white/80 dark:bg-white/10 border border-slate-200 dark:border-white/20 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 dark:focus:ring-emerald-400/70";
 
   return (
     <div className="max-w-[1600px] mx-auto p-6 space-y-6">
-      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-3">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex items-center gap-3"
+      >
         <div className="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center">
           <SettingsIcon className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
         </div>
         <div>
-          <h1 className="text-3xl tracking-tight text-slate-900 dark:text-white" style={{ fontWeight: 700 }}>Settings</h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-0.5">Manage your preferences and account</p>
+          <h1
+            className="text-3xl tracking-tight text-slate-900 dark:text-white"
+            style={{ fontWeight: 700 }}
+          >
+            Settings
+          </h1>
+          <p className="text-slate-500 dark:text-slate-400 mt-0.5">
+            Manage your preferences and account
+          </p>
         </div>
       </motion.div>
 
@@ -159,19 +196,41 @@ export default function SettingsPage() {
 
         <GlassCard className="p-6">
           {activeTab === "profile" && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
-              <h2 className="text-xl tracking-tight text-slate-900 dark:text-white" style={{ fontWeight: 600 }}>Profile Information</h2>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="space-y-6"
+            >
+              <h2
+                className="text-xl tracking-tight text-slate-900 dark:text-white"
+                style={{ fontWeight: 600 }}
+              >
+                Profile Information
+              </h2>
 
               <div className="flex items-center gap-4">
                 {avatar ? (
-                  <img src={avatar} alt="Avatar" className="w-20 h-20 rounded-2xl object-cover shadow-lg" />
+                  <img
+                    src={avatar}
+                    alt="Avatar"
+                    className="w-20 h-20 rounded-2xl object-cover shadow-lg"
+                  />
                 ) : (
-                  <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg" style={{ fontWeight: 600 }}>
+                  <div
+                    className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg"
+                    style={{ fontWeight: 600 }}
+                  >
                     {(profile.name?.[0] ?? "A").toUpperCase()}
                   </div>
                 )}
                 <div>
-                  <input ref={fileRef} type="file" accept="image/*" onChange={handleAvatarChange} className="hidden" />
+                  <input
+                    ref={fileRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleAvatarChange}
+                    className="hidden"
+                  />
                   <button
                     onClick={() => fileRef.current?.click()}
                     className="flex items-center gap-2 px-4 h-10 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full text-sm transition-colors"
@@ -179,44 +238,91 @@ export default function SettingsPage() {
                     <Upload className="w-4 h-4" />
                     Change Photo
                   </button>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Max 2MB</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                    Max 2MB
+                  </p>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm text-slate-700 dark:text-slate-200 mb-1.5" style={{ fontWeight: 600 }}>Full Name</label>
-                  <input type="text" value={profile.name} onChange={(e) => setProfile({ ...profile, name: e.target.value })} className={inputClass} />
+                  <label
+                    className="block text-sm text-slate-700 dark:text-slate-200 mb-1.5"
+                    style={{ fontWeight: 600 }}
+                  >
+                    Full Name
+                  </label>
+                  <input
+                    type="text"
+                    value={profile.name}
+                    onChange={(e) =>
+                      setProfile({ ...profile, name: e.target.value })
+                    }
+                    className={inputClass}
+                  />
                 </div>
                 <div>
-                  <label className="text-sm text-slate-700 dark:text-slate-200 mb-1.5 flex items-center gap-1" style={{ fontWeight: 600 }}>
+                  <label
+                    className="text-sm text-slate-700 dark:text-slate-200 mb-1.5 flex items-center gap-1"
+                    style={{ fontWeight: 600 }}
+                  >
                     <Mail className="w-3 h-3" /> Email
                   </label>
-                  <input type="email" value={profile.email} onChange={(e) => setProfile({ ...profile, email: e.target.value })} className={inputClass} />
+                  <input
+                    type="email"
+                    value={profile.email}
+                    onChange={(e) =>
+                      setProfile({ ...profile, email: e.target.value })
+                    }
+                    className={inputClass}
+                  />
                 </div>
                 <div>
-                  <label className="text-sm text-slate-700 dark:text-slate-200 mb-1.5 flex items-center gap-1" style={{ fontWeight: 600 }}>
+                  <label
+                    className="text-sm text-slate-700 dark:text-slate-200 mb-1.5 flex items-center gap-1"
+                    style={{ fontWeight: 600 }}
+                  >
                     <Phone className="w-3 h-3" /> Phone
                   </label>
-                  <input type="tel" value={profile.phone} onChange={(e) => setProfile({ ...profile, phone: e.target.value })} className={inputClass} />
+                  <input
+                    type="tel"
+                    value={profile.phone}
+                    onChange={(e) =>
+                      setProfile({ ...profile, phone: e.target.value })
+                    }
+                    className={inputClass}
+                  />
                 </div>
                 <div>
-                  <label className="text-sm text-slate-700 dark:text-slate-200 mb-1.5 flex items-center gap-1" style={{ fontWeight: 600 }}>
+                  <label
+                    className="text-sm text-slate-700 dark:text-slate-200 mb-1.5 flex items-center gap-1"
+                    style={{ fontWeight: 600 }}
+                  >
                     <MapPin className="w-3 h-3" /> Location
                   </label>
-                  <input type="text" value={profile.location} onChange={(e) => setProfile({ ...profile, location: e.target.value })} className={inputClass} />
+                  <input
+                    type="text"
+                    value={profile.location}
+                    onChange={(e) =>
+                      setProfile({ ...profile, location: e.target.value })
+                    }
+                    className={inputClass}
+                  />
                 </div>
               </div>
 
               <div className="flex gap-2">
-                <button onClick={() => toast.success("Settings saved")} className="flex items-center gap-2 px-5 h-10 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full text-sm transition-colors">
+                <button
+                  onClick={() => toast.success("Settings saved")}
+                  className="flex items-center gap-2 px-5 h-10 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full text-sm transition-colors"
+                >
                   <Save className="w-4 h-4" /> Save
                 </button>
                 <button
                   onClick={() => {
                     setProfile({
                       name: user?.name ?? "Admin User",
-                      email: user?.email ?? "admin@ecovoid.io",
+                      email: user?.email ?? "admin@EcoSnap.io",
                       phone: "+20 100 555 1212",
                       location: "Cairo, Egypt",
                     });
@@ -231,29 +337,65 @@ export default function SettingsPage() {
           )}
 
           {activeTab === "notifications" && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
-              <h2 className="text-xl tracking-tight text-slate-900 dark:text-white" style={{ fontWeight: 600 }}>Notification Preferences</h2>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="space-y-4"
+            >
+              <h2
+                className="text-xl tracking-tight text-slate-900 dark:text-white"
+                style={{ fontWeight: 600 }}
+              >
+                Notification Preferences
+              </h2>
               {[
-                { key: "email", label: "Email Notifications", desc: "Receive notifications via email" },
-                { key: "push", label: "Push Notifications", desc: "Browser push notifications" },
-                { key: "sms", label: "SMS Notifications", desc: "Text message notifications" },
+                {
+                  key: "email",
+                  label: "Email Notifications",
+                  desc: "Receive notifications via email",
+                },
+                {
+                  key: "push",
+                  label: "Push Notifications",
+                  desc: "Browser push notifications",
+                },
+                {
+                  key: "sms",
+                  label: "SMS Notifications",
+                  desc: "Text message notifications",
+                },
               ].map((item) => {
-                const enabled = notifications[item.key as keyof typeof notifications];
+                const enabled =
+                  notifications[item.key as keyof typeof notifications];
                 return (
-                  <div key={item.key} className="flex items-center justify-between p-4 bg-slate-50 dark:bg-white/5 rounded-2xl">
+                  <div
+                    key={item.key}
+                    className="flex items-center justify-between p-4 bg-slate-50 dark:bg-white/5 rounded-2xl"
+                  >
                     <div>
-                      <h4 className="text-slate-900 dark:text-white text-sm" style={{ fontWeight: 600 }}>{item.label}</h4>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{item.desc}</p>
+                      <h4
+                        className="text-slate-900 dark:text-white text-sm"
+                        style={{ fontWeight: 600 }}
+                      >
+                        {item.label}
+                      </h4>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                        {item.desc}
+                      </p>
                     </div>
                     <button
                       onClick={() => {
                         const next = { ...notifications, [item.key]: !enabled };
                         setNotifications(next);
-                        toast.success(`${item.label} ${!enabled ? "enabled" : "disabled"}`);
+                        toast.success(
+                          `${item.label} ${!enabled ? "enabled" : "disabled"}`,
+                        );
                       }}
                       className={`w-12 h-7 rounded-full transition-all ${enabled ? "bg-emerald-500" : "bg-slate-300 dark:bg-white/10"}`}
                     >
-                      <div className={`w-5 h-5 bg-white rounded-full shadow-md transition-all ${enabled ? "translate-x-6" : "translate-x-1"}`} />
+                      <div
+                        className={`w-5 h-5 bg-white rounded-full shadow-md transition-all ${enabled ? "translate-x-6" : "translate-x-1"}`}
+                      />
                     </button>
                   </div>
                 );
@@ -262,32 +404,86 @@ export default function SettingsPage() {
           )}
 
           {activeTab === "security" && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
-              <h2 className="text-xl tracking-tight text-slate-900 dark:text-white" style={{ fontWeight: 600 }}>Security Settings</h2>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="space-y-4"
+            >
+              <h2
+                className="text-xl tracking-tight text-slate-900 dark:text-white"
+                style={{ fontWeight: 600 }}
+              >
+                Security Settings
+              </h2>
               <div>
-                <label className="text-sm text-slate-700 dark:text-slate-200 mb-1.5 flex items-center gap-1" style={{ fontWeight: 600 }}>
+                <label
+                  className="text-sm text-slate-700 dark:text-slate-200 mb-1.5 flex items-center gap-1"
+                  style={{ fontWeight: 600 }}
+                >
                   <Lock className="w-3 h-3" /> Current Password
                 </label>
-                <input type="password" placeholder="Enter current password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} className={inputClass} />
+                <input
+                  type="password"
+                  placeholder="Enter current password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  className={inputClass}
+                />
               </div>
               <div>
-                <label className="block text-sm text-slate-700 dark:text-slate-200 mb-1.5" style={{ fontWeight: 600 }}>New Password</label>
-                <input type="password" placeholder="Enter new password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} className={inputClass} />
+                <label
+                  className="block text-sm text-slate-700 dark:text-slate-200 mb-1.5"
+                  style={{ fontWeight: 600 }}
+                >
+                  New Password
+                </label>
+                <input
+                  type="password"
+                  placeholder="Enter new password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className={inputClass}
+                />
               </div>
               <div>
-                <label className="block text-sm text-slate-700 dark:text-slate-200 mb-1.5" style={{ fontWeight: 600 }}>Confirm Password</label>
-                <input type="password" placeholder="Confirm new password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className={inputClass} />
+                <label
+                  className="block text-sm text-slate-700 dark:text-slate-200 mb-1.5"
+                  style={{ fontWeight: 600 }}
+                >
+                  Confirm Password
+                </label>
+                <input
+                  type="password"
+                  placeholder="Confirm new password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className={inputClass}
+                />
               </div>
-              <button onClick={handleUpdatePassword} className="flex items-center gap-2 px-5 h-10 bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 hover:bg-rose-500/20 rounded-full text-sm transition-colors">
+              <button
+                onClick={handleUpdatePassword}
+                className="flex items-center gap-2 px-5 h-10 bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 hover:bg-rose-500/20 rounded-full text-sm transition-colors"
+              >
                 <Shield className="w-4 h-4" /> Update Password
               </button>
             </motion.div>
           )}
 
           {activeTab === "appearance" && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
-              <h2 className="text-xl tracking-tight text-slate-900 dark:text-white" style={{ fontWeight: 600 }}>Appearance</h2>
-              <p className="text-sm text-slate-500 dark:text-slate-400">Choose the theme that suits you.</p>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="space-y-4"
+            >
+              <h2
+                className="text-xl tracking-tight text-slate-900 dark:text-white"
+                style={{ fontWeight: 600 }}
+              >
+                Appearance
+              </h2>
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                Choose the theme that suits you.
+              </p>
               <div className="grid grid-cols-3 gap-3">
                 {[
                   { id: "light", label: "Light", Icon: Sun },
@@ -298,7 +494,10 @@ export default function SettingsPage() {
                   return (
                     <button
                       key={id}
-                      onClick={() => { setTheme(id); toast.success(`Theme: ${label}`); }}
+                      onClick={() => {
+                        setTheme(id);
+                        toast.success(`Theme: ${label}`);
+                      }}
                       className={`p-5 rounded-2xl border-2 transition-all text-center ${
                         isSelected
                           ? "bg-violet-500/10 border-violet-500/40"
@@ -306,7 +505,12 @@ export default function SettingsPage() {
                       }`}
                     >
                       <Icon className="w-7 h-7 text-violet-600 dark:text-violet-400 mx-auto mb-2" />
-                      <p className="text-sm text-slate-900 dark:text-white" style={{ fontWeight: 600 }}>{label}</p>
+                      <p
+                        className="text-sm text-slate-900 dark:text-white"
+                        style={{ fontWeight: 600 }}
+                      >
+                        {label}
+                      </p>
                     </button>
                   );
                 })}
@@ -315,8 +519,17 @@ export default function SettingsPage() {
           )}
 
           {activeTab === "data" && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
-              <h2 className="text-xl tracking-tight text-slate-900 dark:text-white" style={{ fontWeight: 600 }}>Data & Privacy</h2>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="space-y-4"
+            >
+              <h2
+                className="text-xl tracking-tight text-slate-900 dark:text-white"
+                style={{ fontWeight: 600 }}
+              >
+                Data & Privacy
+              </h2>
               <button
                 onClick={handleDownloadData}
                 className="w-full flex items-center justify-between p-4 bg-slate-50 dark:bg-white/5 rounded-2xl hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
@@ -326,14 +539,23 @@ export default function SettingsPage() {
                     <Download className="w-5 h-5 text-sky-600 dark:text-sky-400" />
                   </div>
                   <div className="text-left">
-                    <h4 className="text-sm text-slate-900 dark:text-white" style={{ fontWeight: 600 }}>Download Data</h4>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Get a copy of your data</p>
+                    <h4
+                      className="text-sm text-slate-900 dark:text-white"
+                      style={{ fontWeight: 600 }}
+                    >
+                      Download Data
+                    </h4>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                      Get a copy of your data
+                    </p>
                   </div>
                 </div>
               </button>
 
               <button
-                onClick={() => toast.error("Account deletion needs admin approval")}
+                onClick={() =>
+                  toast.error("Account deletion needs admin approval")
+                }
                 className="w-full flex items-center justify-between p-4 bg-rose-500/5 border border-rose-500/20 rounded-2xl hover:bg-rose-500/10 transition-colors"
               >
                 <div className="flex items-center gap-3">
@@ -341,8 +563,15 @@ export default function SettingsPage() {
                     <Trash2 className="w-5 h-5 text-rose-600 dark:text-rose-400" />
                   </div>
                   <div className="text-left">
-                    <h4 className="text-sm text-rose-600 dark:text-rose-400" style={{ fontWeight: 600 }}>Delete Account</h4>
-                    <p className="text-xs text-rose-500/80 mt-0.5">Permanently delete this account</p>
+                    <h4
+                      className="text-sm text-rose-600 dark:text-rose-400"
+                      style={{ fontWeight: 600 }}
+                    >
+                      Delete Account
+                    </h4>
+                    <p className="text-xs text-rose-500/80 mt-0.5">
+                      Permanently delete this account
+                    </p>
                   </div>
                 </div>
               </button>

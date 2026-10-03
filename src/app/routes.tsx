@@ -270,7 +270,7 @@ export const router = createBrowserRouter([
 
       { path: "centers-list", element: <ProtectedRoute allowedRoles={["admin", "manager"]}><CentersListPage /></ProtectedRoute> },
       { path: "activity-log", element: <ProtectedRoute allowedRoles={["admin", "manager"]}><ActivityLogPage /></ProtectedRoute> },
-      { path: "ai-validation", element: <ProtectedRoute allowedRoles={["admin", "manager"]}><AiValidationPage /></ProtectedRoute> },
+      { path: "ai-validation", element: <ProtectedRoute allowedRoles={["admin", "manager", "employee"]}><AiValidationPage /></ProtectedRoute> },
       { path: "verification", element: <ProtectedRoute allowedRoles={["admin", "manager", "driver", "employee"]}><VerificationStationPage /></ProtectedRoute> },
       { path: "employee-history", element: <ProtectedRoute allowedRoles={["admin", "manager", "employee"]}><EmployeeHistoryPage /></ProtectedRoute> },
       { path: "employee-profile", element: <ProtectedRoute allowedRoles={["admin", "manager", "employee"]}><EmployeeProfilePage /></ProtectedRoute> },

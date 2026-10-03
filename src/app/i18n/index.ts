@@ -4,7 +4,7 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import en from "./locales/en.json";
 import ar from "./locales/ar.json";
 
-const STORAGE_KEY = "ecovoid:lang";
+const STORAGE_KEY = "EcoSnap:lang";
 
 if (!i18n.isInitialized) {
   i18n

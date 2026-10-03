@@ -1,4 +1,11 @@
-import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+  useCallback,
+} from "react";
 
 export type Role = "admin" | "manager" | "driver" | "citizen" | "employee";
 
@@ -20,7 +27,7 @@ interface AuthContextValue {
   setRole: (role: Role) => void;
 }
 
-const STORAGE_KEY = "ecovoid_auth";
+const STORAGE_KEY = "EcoSnap_auth";
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
@@ -56,52 +63,69 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const persist = useCallback((u: AuthUser | null) => {
-    if (u) localStorage.setItem(STORAGE_KEY, JSON.stringify(u));
-    else localStorage.removeItem(STORAGE_KEY);
+    if (u) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(u));
+      localStorage.setItem("EcoSnap.auth.token", `mock_jwt_${u.id}_${u.role}`);
+    } else {
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem("EcoSnap.auth.token");
+    }
   }, []);
 
-  const login = useCallback(async (email: string, password: string) => {
-    if (!email || !password) throw new Error("Email and password are required");
-    await new Promise((r) => setTimeout(r, 600));
-    const role = inferRole(email);
-    const u: AuthUser = {
-      id: `usr_${Date.now()}`,
-      name: nameFromEmail(email),
-      email,
-      role,
-    };
-    setUser(u);
-    persist(u);
-    return u;
-  }, [persist]);
+  const login = useCallback(
+    async (email: string, password: string) => {
+      if (!email.trim() || !password.trim())
+        throw new Error("Email and password are required");
+      await new Promise((r) => setTimeout(r, 600));
+      const role = inferRole(email.trim());
+      const u: AuthUser = {
+        id: `usr_${Date.now()}`,
+        name: nameFromEmail(email.trim()),
+        email: email.trim(),
+        role,
+      };
+      setUser(u);
+      persist(u);
+      return u;
+    },
+    [persist],
+  );
 
-  const signup = useCallback(async (name: string, email: string, password: string) => {
-    if (!name || !email || !password) throw new Error("All fields are required");
-    await new Promise((r) => setTimeout(r, 600));
-    const u: AuthUser = {
-      id: `usr_${Date.now()}`,
-      name,
-      email,
-      role: "citizen",
-    };
-    setUser(u);
-    persist(u);
-    return u;
-  }, [persist]);
+  const signup = useCallback(
+    async (name: string, email: string, password: string) => {
+      if (!name.trim() || !email.trim() || !password.trim())
+        throw new Error("All fields are required");
+      await new Promise((r) => setTimeout(r, 600));
+      const role = inferRole(email.trim());
+      const u: AuthUser = {
+        id: `usr_${Date.now()}`,
+        name: name.trim(),
+        email: email.trim(),
+        role,
+      };
+      setUser(u);
+      persist(u);
+      return u;
+    },
+    [persist],
+  );
 
   const logout = useCallback(() => {
     setUser(null);
     persist(null);
   }, [persist]);
 
-  const setRole = useCallback((role: Role) => {
-    setUser((prev) => {
-      if (!prev) return prev;
-      const next = { ...prev, role };
-      persist(next);
-      return next;
-    });
-  }, [persist]);
+  const setRole = useCallback(
+    (role: Role) => {
+      setUser((prev) => {
+        if (!prev) return prev;
+        const next = { ...prev, role };
+        persist(next);
+        return next;
+      });
+    },
+    [persist],
+  );
 
   return (
     <AuthContext.Provider

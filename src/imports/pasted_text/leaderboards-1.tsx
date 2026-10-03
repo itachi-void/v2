@@ -13,7 +13,7 @@ import {
   Filter,
   Calendar,
 } from "lucide-react";
-import type { LeaderboardEntry } from "../../types/recyclehub";
+import type { LeaderboardEntry } from "../../types/EcoSnap";
 
 const mockLeaderboard: LeaderboardEntry[] = [
   {
@@ -119,7 +119,9 @@ const mockLeaderboard: LeaderboardEntry[] = [
 ];
 
 export default function Leaderboards() {
-  const [timeframe, setTimeframe] = useState<"weekly" | "monthly" | "alltime">("alltime");
+  const [timeframe, setTimeframe] = useState<"weekly" | "monthly" | "alltime">(
+    "alltime",
+  );
 
   const getRankIcon = (rank: number) => {
     switch (rank) {
@@ -222,7 +224,7 @@ export default function Leaderboards() {
               <div className="flex items-center justify-center mb-4">
                 <div
                   className={`w-20 h-20 rounded-full flex items-center justify-center ${getRankBg(
-                    entry.rank
+                    entry.rank,
                   )}`}
                 >
                   {getRankIcon(entry.rank)}
@@ -260,8 +262,8 @@ export default function Leaderboards() {
                   {entry.trend === "up"
                     ? "Rising"
                     : entry.trend === "down"
-                    ? "Falling"
-                    : "Stable"}
+                      ? "Falling"
+                      : "Stable"}
                 </span>
               </div>
             </div>
@@ -322,7 +324,9 @@ export default function Leaderboards() {
                         <p className="font-semibold text-gray-900">
                           {entry.citizenName}
                         </p>
-                        <p className="text-sm text-gray-500">{entry.citizenId}</p>
+                        <p className="text-sm text-gray-500">
+                          {entry.citizenId}
+                        </p>
                       </div>
                     </div>
                   </td>
@@ -352,15 +356,15 @@ export default function Leaderboards() {
                           entry.trend === "up"
                             ? "text-green-600"
                             : entry.trend === "down"
-                            ? "text-red-600"
-                            : "text-gray-600"
+                              ? "text-red-600"
+                              : "text-gray-600"
                         }`}
                       >
                         {entry.trend === "up"
                           ? "Rising"
                           : entry.trend === "down"
-                          ? "Falling"
-                          : "Stable"}
+                            ? "Falling"
+                            : "Stable"}
                       </span>
                     </div>
                   </td>

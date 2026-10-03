@@ -5,6 +5,7 @@ import type { Role } from "@/app/contexts/AuthContext";
 // instead of the operational /overview dashboard.
 export const CITIZEN_PATHS = new Set([
   "/portal",
+  "/citizen-stats",
   "/leaderboards",
   "/badges",
   "/citizen-levels",

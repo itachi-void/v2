@@ -20,6 +20,8 @@ export default function ProtectedRoute({ children, allowedRoles }: ProtectedRout
     if (denied && !deniedRef.current) {
       deniedRef.current = true;
       toast.error("Access denied");
+    } else if (!denied) {
+      deniedRef.current = false;
     }
   }, [denied]);
 
