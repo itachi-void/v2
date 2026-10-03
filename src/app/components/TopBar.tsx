@@ -8,7 +8,7 @@ import NotificationBell from "./NotificationBell";
 import LanguageToggle from "./LanguageToggle";
 import PremiumAuthButton from "./PremiumLogoutButton";
 import { useAuth, type Role } from "@/app/contexts/AuthContext";
-import { canAccess } from "@/app/utils/roleAccess";
+import { canAccess, homePathForRole } from "@/app/utils/roleAccess";
 import { springLayout } from "@/app/constants/motion";
 import {
   ChevronDown,
@@ -286,6 +286,9 @@ export default function TopBar() {
     setRole(r);
     setUserOpen(false);
     toast.info(`Switched to ${roleAccents[r].label}`);
+    if (!canAccess(r, location.pathname)) {
+      navigate(homePathForRole(r), { replace: true });
+    }
   };
 
   return (

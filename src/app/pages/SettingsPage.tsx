@@ -73,6 +73,16 @@ export default function SettingsPage() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  useEffect(() => {
+    if (user?.email && profile.email !== user.email) {
+      setProfile((p) => ({
+        ...p,
+        name: user.name || p.name,
+        email: user.email,
+      }));
+    }
+  }, [user?.email, user?.name, profile.email, setProfile]);
+
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;

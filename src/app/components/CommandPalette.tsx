@@ -37,6 +37,11 @@ import {
   Sparkles,
   Clock,
   Command as CommandIcon,
+  ScanLine,
+  Gift,
+  Truck,
+  History,
+  User as UserIcon,
 } from "lucide-react";
 
 interface Item {
@@ -77,6 +82,12 @@ const ROUTE_ITEMS: { to: string; label: string; icon: any; keywords?: string }[]
   { to: "/sustainability", label: "Sustainability", icon: Recycle },
   { to: "/schedule", label: "Schedule", icon: Clock },
   { to: "/ai-validation", label: "AI Validation", icon: Sparkles },
+  { to: "/verification", label: "Verification Station", icon: ScanLine },
+  { to: "/rewards", label: "Rewards & Prizes", icon: Gift },
+  { to: "/logistics", label: "Logistics Impact", icon: Truck },
+  { to: "/driver-home", label: "Driver Hub", icon: Truck },
+  { to: "/employee-history", label: "Employee History", icon: History },
+  { to: "/employee-profile", label: "Employee Profile", icon: UserIcon },
   { to: "/settings", label: "Settings", icon: Settings },
 ];
 
